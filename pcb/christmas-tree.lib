@@ -1,0 +1,41 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Logo_Love_Always
+#
+DEF ~Logo_Love_Always #LOGO 0 40 Y Y 1 F N
+F0 "#LOGO" 0 100 50 H I C CNN
+F1 "Logo_Love_Always" 0 -100 50 H I C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+T 0 0 0 50 0 0 0 "Love Always," Normal 0 C C
+ENDDRAW
+ENDDEF
+#
+# Logo_Merry_Christmas
+#
+DEF ~Logo_Merry_Christmas #LOGO 0 40 Y Y 1 F N
+F0 "#LOGO" 0 100 50 H I C CNN
+F1 "Logo_Merry_Christmas" 0 -100 50 H I C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+T 0 0 0 50 0 0 0 "Merry Christmas 2018" Normal 0 C C
+ENDDRAW
+ENDDEF
+#
+# Logo_Open_Hardware_Large
+#
+DEF ~Logo_Open_Hardware_Large #LOGO 0 40 Y Y 1 F N
+F0 "#LOGO" 0 150 50 H I C CNN
+F1 "Logo_Open_Hardware_Large" 0 -150 50 H I C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+T 0 0 -50 50 0 0 0 "Love always, Joel" Normal 0 C C
+T 0 0 50 50 0 0 0 "Merry Christmas 2018" Normal 0 C C
+ENDDRAW
+ENDDEF
+#
+#End Library

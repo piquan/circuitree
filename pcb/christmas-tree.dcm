@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP Logo_Merry_Christmas
+D Merry Christmas logo
+K Logo
+F ~
+$ENDCMP
+#
+$CMP Logo_Open_Hardware_Large
+D Merry Christmas logo
+K Logo
+F ~
+$ENDCMP
+#
+#End Doc Library

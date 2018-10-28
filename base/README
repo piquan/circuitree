@@ -1,0 +1,6 @@
+I used generate-dome.py to generate qp.scad, which is used by dome.scad.
+
+I haven't worked out the details of the base yet, so a lot of this is
+pretty rough.  There's some code that is redundant or unused, such as
+some code to create internal webbing that later was replaced by the
+slicer's infill.

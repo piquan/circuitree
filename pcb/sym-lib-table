@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name christmas-tree)(type Legacy)(uri ${KIPRJMOD}/christmas-tree.lib)(options "")(descr ""))
+)

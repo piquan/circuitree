@@ -1,0 +1,1802 @@
+EESchema Schematic File Version 4
+LIBS:christmas-tree-cache
+EELAYER 26 0
+EELAYER END
+$Descr USLetter 11000 8500
+encoding utf-8
+Sheet 1 1
+Title "Christmas Tree"
+Date ""
+Rev "3"
+Comp "Joel Ray Holveck"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector:AVR-ISP-6 J1
+U 1 1 5BAAE340
+P 5450 1850
+F 0 "J1" H 5170 1946 50  0000 R CNN
+F 1 "TC2030" H 5170 1855 50  0000 R CNN
+F 2 "Connector:Tag-Connect_TC2030-IDC-FP_2x03_P1.27mm_Vertical" V 5200 1900 50  0001 C CNN
+F 3 " ~" H 4175 1300 50  0001 C CNN
+	1    5450 1850
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	2750 2900 3650 2900
+Wire Wire Line
+	4400 2900 4400 2500
+$Comp
+L Jumper:SolderJumper_2_Bridged JP3
+U 1 1 5BAAE644
+P 5550 1050
+F 0 "JP3" V 5550 1118 50  0000 L CNN
+F 1 "SolderJumper_2_Bridged" V 5595 1118 50  0001 L CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm" H 5550 1050 50  0001 C CNN
+F 3 "~" H 5550 1050 50  0001 C CNN
+	1    5550 1050
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR07
+U 1 1 5BAAE85A
+P 5550 2250
+F 0 "#PWR07" H 5550 2000 50  0001 C CNN
+F 1 "GND" H 5555 2077 50  0000 C CNN
+F 2 "" H 5550 2250 50  0001 C CNN
+F 3 "" H 5550 2250 50  0001 C CNN
+	1    5550 2250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2150 1400 2150 1350
+$Comp
+L power:+3V3 #PWR01
+U 1 1 5BAAECEF
+P 2150 1300
+F 0 "#PWR01" H 2150 1150 50  0001 C CNN
+F 1 "+3V3" H 2165 1473 50  0000 C CNN
+F 2 "" H 2150 1300 50  0001 C CNN
+F 3 "" H 2150 1300 50  0001 C CNN
+	1    2150 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Alt O1
+U 1 1 5BAB6B5A
+P 4300 800
+F 0 "O1" V 4300 988 50  0000 L CNN
+F 1 "BRIGHT-" V 4300 1150 50  0000 L CNN
+F 2 "christmas-tree:TestPoint_Pad_D15.0mm" H 4500 800 50  0001 C CNN
+F 3 "~" H 4500 800 50  0001 C CNN
+	1    4300 800 
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint_Alt O2
+U 1 1 5BAB6B7A
+P 4300 900
+F 0 "O2" V 4300 1088 50  0000 L CNN
+F 1 "BRIGHT+" V 4300 1250 50  0000 L CNN
+F 2 "christmas-tree:TestPoint_Pad_D15.0mm" H 4500 900 50  0001 C CNN
+F 3 "~" H 4500 900 50  0001 C CNN
+	1    4300 900 
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint_Alt O3
+U 1 1 5BAB6BA3
+P 4300 1000
+F 0 "O3" V 4300 1188 50  0000 L CNN
+F 1 "JOY" V 4300 1350 50  0000 L CNN
+F 2 "christmas-tree:TestPoint_Pad_D15.0mm" H 4500 1000 50  0001 C CNN
+F 3 "~" H 4500 1000 50  0001 C CNN
+	1    4300 1000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2750 1900 3450 1900
+Wire Wire Line
+	2750 1800 3350 1800
+$Comp
+L MCU_Microchip_ATtiny:ATtiny84A-SSU U1
+U 1 1 5BABAACA
+P 2150 2300
+F 0 "U1" H 2100 2650 50  0000 R CNN
+F 1 "ATtiny84A-20SSU" H 2350 2550 50  0000 R CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2150 2300 50  0001 C CIN
+F 3 "datasheets/ATtiny84.pdf" H 2150 2300 50  0001 C CNN
+	1    2150 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2750 2200 3250 2200
+Wire Wire Line
+	2750 2000 3550 2000
+$Comp
+L Driver_LED:TLC5947DAP U2
+U 1 1 5BABCE4D
+P 4750 5550
+F 0 "U2" H 4550 6250 50  0000 C CNN
+F 1 "TLC5947DAP" H 4550 6150 50  0000 C CNN
+F 2 "Package_SO:HTSSOP-32-1EP_6.1x11mm_P0.65mm_EP5.2x11mm_Mask4.11x4.36mm_ThermalVias" H 4200 7150 50  0001 L CNN
+F 3 "http://www.ti.com/lit/ds/symlink/tlc5947.pdf" H 4750 5550 50  0001 C CNN
+	1    4750 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4050 5650 3250 5650
+Wire Wire Line
+	3250 5650 3250 2200
+Connection ~ 3250 2200
+Wire Wire Line
+	4050 5550 3350 5550
+Wire Wire Line
+	3350 2800 2750 2800
+Wire Wire Line
+	4050 5450 3450 5450
+Wire Wire Line
+	3450 2700 2750 2700
+Wire Wire Line
+	4050 5350 3550 5350
+Wire Wire Line
+	3550 2600 2750 2600
+$Comp
+L Connector:TestPoint_Alt O4
+U 1 1 5BAC0D56
+P 4300 1100
+F 0 "O4" V 4300 1288 50  0000 L CNN
+F 1 "ON/OFF" V 4300 1450 50  0000 L CNN
+F 2 "christmas-tree:TestPoint_Pad_D15.0mm" H 4500 1100 50  0001 C CNN
+F 3 "~" H 4500 1100 50  0001 C CNN
+	1    4300 1100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2750 2400 3650 2400
+$Comp
+L Connector:TestPoint_Alt O5
+U 1 1 5BAC261D
+P 4300 1200
+F 0 "O5" V 4300 1388 50  0000 L CNN
+F 1 "PEACE" V 4300 1550 50  0000 L CNN
+F 2 "christmas-tree:TestPoint_Pad_D15.0mm" H 4500 1200 50  0001 C CNN
+F 3 "~" H 4500 1200 50  0001 C CNN
+	1    4300 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint_Alt O6
+U 1 1 5BAC2624
+P 4300 1300
+F 0 "O6" V 4300 1488 50  0000 L CNN
+F 1 "LOVE" V 4300 1650 50  0000 L CNN
+F 2 "christmas-tree:TestPoint_Pad_D15.0mm" H 4500 1300 50  0001 C CNN
+F 3 "~" H 4500 1300 50  0001 C CNN
+	1    4300 1300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R8
+U 1 1 5BACCA56
+P 3150 6000
+F 0 "R8" H 3220 6046 50  0000 L CNN
+F 1 "2.7K" H 3220 5955 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 6000 50  0001 C CNN
+F 3 "~" H 3150 6000 50  0001 C CNN
+	1    3150 6000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3150 5850 3150 5250
+Wire Wire Line
+	3150 5250 4050 5250
+$Comp
+L power:GND #PWR012
+U 1 1 5BACD673
+P 3150 6250
+F 0 "#PWR012" H 3150 6000 50  0001 C CNN
+F 1 "GND" H 3155 6077 50  0000 C CNN
+F 2 "" H 3150 6250 50  0001 C CNN
+F 3 "" H 3150 6250 50  0001 C CNN
+	1    3150 6250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3150 6250 3150 6150
+$Comp
+L Device:C C9
+U 1 1 5BAD0AD0
+P 3950 4650
+F 0 "C9" H 3950 4550 50  0000 L CNN
+F 1 "0.1uF" H 3950 4750 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3988 4500 50  0001 C CNN
+F 3 "~" H 3950 4650 50  0001 C CNN
+	1    3950 4650
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	3950 4500 3950 4050
+Wire Wire Line
+	3950 4050 4950 4050
+Wire Wire Line
+	3950 4800 3950 6950
+Wire Wire Line
+	3950 6950 4650 6950
+Wire Wire Line
+	4950 3950 4950 4050
+Connection ~ 4950 4050
+$Comp
+L power:GND #PWR014
+U 1 1 5BAD302B
+P 4650 7050
+F 0 "#PWR014" H 4650 6800 50  0001 C CNN
+F 1 "GND" H 4655 6877 50  0000 C CNN
+F 2 "" H 4650 7050 50  0001 C CNN
+F 3 "" H 4650 7050 50  0001 C CNN
+	1    4650 7050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 7050 4650 6950
+Connection ~ 4650 6950
+Wire Wire Line
+	4650 6950 4850 6950
+$Comp
+L Device:R R6
+U 1 1 5BAD5731
+P 3150 1300
+F 0 "R6" V 3150 1300 50  0000 C CNN
+F 1 "1M" V 3250 1300 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 1300 50  0001 C CNN
+F 3 "~" H 3150 1300 50  0001 C CNN
+	1    3150 1300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5BAD5D3B
+P 3150 800
+F 0 "R1" V 3150 800 50  0000 C CNN
+F 1 "1M" V 3250 800 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 800 50  0001 C CNN
+F 3 "~" H 3150 800 50  0001 C CNN
+	1    3150 800 
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5BAD5D74
+P 3150 900
+F 0 "R2" V 3150 900 50  0000 C CNN
+F 1 "1M" V 3250 900 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 900 50  0001 C CNN
+F 3 "~" H 3150 900 50  0001 C CNN
+	1    3150 900 
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5BAD5DAE
+P 3150 1000
+F 0 "R3" V 3150 1000 50  0000 C CNN
+F 1 "1M" V 3250 1000 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 1000 50  0001 C CNN
+F 3 "~" H 3150 1000 50  0001 C CNN
+	1    3150 1000
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5BAD5DE6
+P 3150 1100
+F 0 "R4" V 3150 1100 50  0000 C CNN
+F 1 "1M" V 3250 1100 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 1100 50  0001 C CNN
+F 3 "~" H 3150 1100 50  0001 C CNN
+	1    3150 1100
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5BAD5E20
+P 3150 1200
+F 0 "R5" V 3150 1200 50  0000 C CNN
+F 1 "1M" V 3250 1200 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 1200 50  0001 C CNN
+F 3 "~" H 3150 1200 50  0001 C CNN
+	1    3150 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:USB_B_Micro J2
+U 1 1 5BAFC535
+P 6100 2400
+F 0 "J2" H 6155 2867 50  0000 C CNN
+F 1 "USB_B_Micro" H 6155 2776 50  0000 C CNN
+F 2 "Connector_USB:USB_Micro-B_Molex_47346-0001" H 6250 2350 50  0001 C CNN
+F 3 "~" H 6250 2350 50  0001 C CNN
+	1    6100 2400
+	1    0    0    -1  
+$EndComp
+NoConn ~ 6400 2400
+NoConn ~ 6400 2500
+NoConn ~ 6400 2600
+NoConn ~ 6000 2800
+$Comp
+L power:GND #PWR06
+U 1 1 5BB02046
+P 6100 2900
+F 0 "#PWR06" H 6100 2650 50  0001 C CNN
+F 1 "GND" H 6105 2727 50  0000 C CNN
+F 2 "" H 6100 2900 50  0001 C CNN
+F 3 "" H 6100 2900 50  0001 C CNN
+	1    6100 2900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6100 2800 6100 2850
+$Comp
+L Device:CP C2
+U 1 1 5BB04D1C
+P 7700 2450
+F 0 "C2" H 7815 2496 50  0000 L CNN
+F 1 "3.3uF" H 7815 2405 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 7738 2300 50  0001 C CNN
+F 3 "~" H 7700 2450 50  0001 C CNN
+	1    7700 2450
+	1    0    0    -1  
+$EndComp
+Connection ~ 6100 2850
+Wire Wire Line
+	6100 2850 6100 2900
+$Comp
+L Regulator_Linear:TC1262-33 U3
+U 1 1 5BB0809D
+P 8700 2200
+F 0 "U3" H 8800 1950 50  0000 C CNN
+F 1 "LT1129CST-3.3" H 8700 2350 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 8700 2425 50  0001 C CIN
+F 3 "/home/jholveck/src/christmas-tree/datasheets/21373C.pdf" H 8700 1900 50  0001 C CNN
+	1    8700 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Polyfuse F1
+U 1 1 5BB09C35
+P 6650 2200
+F 0 "F1" V 6425 2200 50  0000 C CNN
+F 1 "500mA" V 6516 2200 50  0000 C CNN
+F 2 "Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 6700 2000 50  0001 L CNN
+F 3 "~" H 6650 2200 50  0001 C CNN
+	1    6650 2200
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6800 2200 6850 2200
+Wire Wire Line
+	8700 2850 8700 2500
+$Comp
+L power:+5V #PWR04
+U 1 1 5BB1E389
+P 8050 2050
+F 0 "#PWR04" H 8050 1900 50  0001 C CNN
+F 1 "+5V" H 8065 2223 50  0000 C CNN
+F 2 "" H 8050 2050 50  0001 C CNN
+F 3 "" H 8050 2050 50  0001 C CNN
+	1    8050 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR03
+U 1 1 5BB1FE44
+P 9650 2050
+F 0 "#PWR03" H 9650 1900 50  0001 C CNN
+F 1 "+3V3" H 9665 2223 50  0000 C CNN
+F 2 "" H 9650 2050 50  0001 C CNN
+F 3 "" H 9650 2050 50  0001 C CNN
+	1    9650 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C3
+U 1 1 5BB2DB76
+P 8050 2350
+F 0 "C3" H 8165 2396 50  0000 L CNN
+F 1 "DNP" H 8165 2305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 8088 2200 50  0001 C CNN
+F 3 "~" H 8050 2350 50  0001 C CNN
+	1    8050 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 5BB2DBC2
+P 8050 2650
+F 0 "C4" H 8165 2696 50  0000 L CNN
+F 1 "DNP" H 8165 2605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 8088 2500 50  0001 C CNN
+F 3 "~" H 8050 2650 50  0001 C CNN
+	1    8050 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9000 2200 9200 2200
+$Comp
+L Device:CP C5
+U 1 1 5BB57AFE
+P 9200 2450
+F 0 "C5" H 9315 2496 50  0000 L CNN
+F 1 "3.3uF" H 9315 2405 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 9238 2300 50  0001 C CNN
+F 3 "~" H 9200 2450 50  0001 C CNN
+	1    9200 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C6
+U 1 1 5BB57B64
+P 9650 2450
+F 0 "C6" H 9765 2496 50  0000 L CNN
+F 1 "DNP" H 9765 2405 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 9688 2300 50  0001 C CNN
+F 3 "~" H 9650 2450 50  0001 C CNN
+	1    9650 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8700 2850 9200 2850
+Wire Wire Line
+	9200 2850 9200 2600
+Connection ~ 8700 2850
+Wire Wire Line
+	9200 2300 9200 2200
+Wire Wire Line
+	9650 2200 9650 2300
+Wire Wire Line
+	9650 2850 9650 2600
+Wire Wire Line
+	9650 2050 9650 2200
+Connection ~ 9650 2200
+Wire Wire Line
+	9200 2200 9650 2200
+Connection ~ 9200 2200
+Wire Wire Line
+	9200 2850 9650 2850
+Connection ~ 9200 2850
+$Comp
+L power:GND #PWR08
+U 1 1 5BB6BEA1
+P 2150 3300
+F 0 "#PWR08" H 2150 3050 50  0001 C CNN
+F 1 "GND" H 2155 3127 50  0000 C CNN
+F 2 "" H 2150 3300 50  0001 C CNN
+F 3 "" H 2150 3300 50  0001 C CNN
+	1    2150 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2150 3300 2150 3250
+$Comp
+L Device:C C1
+U 1 1 5BB6E34B
+P 1400 1950
+F 0 "C1" H 1400 1850 50  0000 L CNN
+F 1 "0.1uF" H 1400 2050 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1438 1800 50  0001 C CNN
+F 3 "~" H 1400 1950 50  0001 C CNN
+	1    1400 1950
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	1400 1800 1400 1350
+Wire Wire Line
+	1400 1350 2150 1350
+Connection ~ 2150 1350
+Wire Wire Line
+	2150 1350 2150 1300
+Wire Wire Line
+	1400 2100 1400 3250
+Wire Wire Line
+	1400 3250 2150 3250
+Connection ~ 2150 3250
+Wire Wire Line
+	2150 3250 2150 3200
+$Comp
+L Device:LED_RGB D2
+U 1 1 5BB7EF2E
+P 6000 4050
+F 0 "D2" H 6000 4547 50  0000 C CNN
+F 1 "LED_RGB" H 6000 4456 50  0000 C CNN
+F 2 "LED_SMD:LED_RGB_5050-6" H 6000 4000 50  0001 C CNN
+F 3 "~" H 6000 4000 50  0001 C CNN
+	1    6000 4050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5800 4250 5800 4350
+Wire Wire Line
+	5800 4350 5450 4350
+Wire Wire Line
+	5450 4450 6000 4450
+Wire Wire Line
+	6000 4450 6000 4250
+$Comp
+L power:+3V3 #PWR011
+U 1 1 5BB8A228
+P 4950 3950
+F 0 "#PWR011" H 4950 3800 50  0001 C CNN
+F 1 "+3V3" H 4965 4123 50  0000 C CNN
+F 2 "" H 4950 3950 50  0001 C CNN
+F 3 "" H 4950 3950 50  0001 C CNN
+	1    4950 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 4550 6200 4550
+Wire Wire Line
+	6200 4550 6200 4250
+$Comp
+L Device:LED_ALT D3
+U 1 1 5BB8D3BB
+P 6500 4650
+F 0 "D3" H 6600 4600 50  0000 C CNN
+F 1 "LTST-C150KRKT" H 6492 4486 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 4650 50  0001 C CNN
+F 3 "~" H 6500 4650 50  0001 C CNN
+	1    6500 4650
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D4
+U 1 1 5BB90D7F
+P 6500 4750
+F 0 "D4" H 6600 4700 50  0000 C CNN
+F 1 "LTST-C150KSKT" H 6492 4586 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 4750 50  0001 C CNN
+F 3 "~" H 6500 4750 50  0001 C CNN
+	1    6500 4750
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D5
+U 1 1 5BB90F2A
+P 6500 4850
+F 0 "D5" H 6600 4800 50  0000 C CNN
+F 1 "LTST-C150TBKT" H 6492 4686 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 4850 50  0001 C CNN
+F 3 "~" H 6500 4850 50  0001 C CNN
+	1    6500 4850
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D6
+U 1 1 5BB90F8E
+P 6500 4950
+F 0 "D6" H 6600 4900 50  0000 C CNN
+F 1 "LTST-C150KGKT" H 6492 4786 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 4950 50  0001 C CNN
+F 3 "~" H 6500 4950 50  0001 C CNN
+	1    6500 4950
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D9
+U 1 1 5BB90FE2
+P 6500 5250
+F 0 "D9" H 6600 5200 50  0000 C CNN
+F 1 "LTST-C150TBKT" H 6492 5086 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5250 50  0001 C CNN
+F 3 "~" H 6500 5250 50  0001 C CNN
+	1    6500 5250
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D8
+U 1 1 5BB91038
+P 6500 5150
+F 0 "D8" H 6600 5100 50  0000 C CNN
+F 1 "LTST-C150KSKT" H 6492 4986 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5150 50  0001 C CNN
+F 3 "~" H 6500 5150 50  0001 C CNN
+	1    6500 5150
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D7
+U 1 1 5BB940C8
+P 6500 5050
+F 0 "D7" H 6600 5000 50  0000 C CNN
+F 1 "LTST-C150KRKT" H 6492 4886 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5050 50  0001 C CNN
+F 3 "~" H 6500 5050 50  0001 C CNN
+	1    6500 5050
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D10
+U 1 1 5BB9412A
+P 6500 5350
+F 0 "D10" H 6600 5300 50  0000 C CNN
+F 1 "LTST-C150KGKT" H 6492 5186 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5350 50  0001 C CNN
+F 3 "~" H 6500 5350 50  0001 C CNN
+	1    6500 5350
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D11
+U 1 1 5BB9418E
+P 6500 5450
+F 0 "D11" H 6600 5400 50  0000 C CNN
+F 1 "LTST-C150KRKT" H 6492 5286 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5450 50  0001 C CNN
+F 3 "~" H 6500 5450 50  0001 C CNN
+	1    6500 5450
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D12
+U 1 1 5BB941F0
+P 6500 5550
+F 0 "D12" H 6600 5500 50  0000 C CNN
+F 1 "LTST-C150KSKT" H 6492 5386 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5550 50  0001 C CNN
+F 3 "~" H 6500 5550 50  0001 C CNN
+	1    6500 5550
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D13
+U 1 1 5BB9427C
+P 6500 5650
+F 0 "D13" H 6600 5600 50  0000 C CNN
+F 1 "LTST-C150TBKT" H 6492 5486 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5650 50  0001 C CNN
+F 3 "~" H 6500 5650 50  0001 C CNN
+	1    6500 5650
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D14
+U 1 1 5BB942DE
+P 6500 5750
+F 0 "D14" H 6600 5700 50  0000 C CNN
+F 1 "LTST-C150KGKT" H 6492 5586 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5750 50  0001 C CNN
+F 3 "~" H 6500 5750 50  0001 C CNN
+	1    6500 5750
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D15
+U 1 1 5BB94342
+P 6500 5850
+F 0 "D15" H 6600 5800 50  0000 C CNN
+F 1 "LTST-C150KRKT" H 6492 5686 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5850 50  0001 C CNN
+F 3 "~" H 6500 5850 50  0001 C CNN
+	1    6500 5850
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D16
+U 1 1 5BB943AC
+P 6500 5950
+F 0 "D16" H 6600 5900 50  0000 C CNN
+F 1 "LTST-C150KSKT" H 6492 5786 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 5950 50  0001 C CNN
+F 3 "~" H 6500 5950 50  0001 C CNN
+	1    6500 5950
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D17
+U 1 1 5BB94414
+P 6500 6050
+F 0 "D17" H 6600 6000 50  0000 C CNN
+F 1 "LTST-C150TBKT" H 6492 5886 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6050 50  0001 C CNN
+F 3 "~" H 6500 6050 50  0001 C CNN
+	1    6500 6050
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D18
+U 1 1 5BB9447E
+P 6500 6150
+F 0 "D18" H 6600 6100 50  0000 C CNN
+F 1 "LTST-C150KGKT" H 6492 5986 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6150 50  0001 C CNN
+F 3 "~" H 6500 6150 50  0001 C CNN
+	1    6500 6150
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D19
+U 1 1 5BB944EE
+P 6500 6250
+F 0 "D19" H 6600 6200 50  0000 C CNN
+F 1 "LTST-C150KRKT" H 6492 6086 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6250 50  0001 C CNN
+F 3 "~" H 6500 6250 50  0001 C CNN
+	1    6500 6250
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D20
+U 1 1 5BB94560
+P 6500 6350
+F 0 "D20" H 6600 6300 50  0000 C CNN
+F 1 "LTST-C150KSKT" H 6492 6186 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6350 50  0001 C CNN
+F 3 "~" H 6500 6350 50  0001 C CNN
+	1    6500 6350
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D21
+U 1 1 5BB945D4
+P 6500 6450
+F 0 "D21" H 6600 6400 50  0000 C CNN
+F 1 "LTST-C150TBKT" H 6492 6286 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6450 50  0001 C CNN
+F 3 "~" H 6500 6450 50  0001 C CNN
+	1    6500 6450
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D22
+U 1 1 5BB94646
+P 6500 6550
+F 0 "D22" H 6600 6500 50  0000 C CNN
+F 1 "LTST-C150KGKT" H 6492 6386 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6550 50  0001 C CNN
+F 3 "~" H 6500 6550 50  0001 C CNN
+	1    6500 6550
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:LED_ALT D23
+U 1 1 5BB946BA
+P 6500 6650
+F 0 "D23" H 6600 6600 50  0000 C CNN
+F 1 "LTST-C150KRKT" H 6492 6486 50  0001 C CNN
+F 2 "christmas-tree:LED_1206_Wurth_AK" H 6500 6650 50  0001 C CNN
+F 3 "~" H 6500 6650 50  0001 C CNN
+	1    6500 6650
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	5450 4650 6350 4650
+Wire Wire Line
+	5450 4750 6350 4750
+Wire Wire Line
+	5450 4850 6350 4850
+Wire Wire Line
+	5450 4950 6350 4950
+Wire Wire Line
+	5450 5050 6350 5050
+Wire Wire Line
+	5450 5150 6350 5150
+Wire Wire Line
+	5450 5250 6350 5250
+Wire Wire Line
+	5450 5350 6350 5350
+Wire Wire Line
+	5450 5450 6350 5450
+Wire Wire Line
+	5450 5550 6350 5550
+Wire Wire Line
+	5450 5650 6350 5650
+Wire Wire Line
+	5450 5750 6350 5750
+Wire Wire Line
+	5450 5850 6350 5850
+Wire Wire Line
+	5450 5950 6350 5950
+Wire Wire Line
+	5450 6050 6350 6050
+Wire Wire Line
+	5450 6150 6350 6150
+Wire Wire Line
+	5450 6250 6350 6250
+Wire Wire Line
+	5450 6350 6350 6350
+Wire Wire Line
+	5450 6450 6350 6450
+Wire Wire Line
+	5450 6550 6350 6550
+Wire Wire Line
+	5450 6650 6350 6650
+Wire Wire Line
+	6650 6650 6650 6550
+Wire Wire Line
+	6650 6450 6650 6550
+Connection ~ 6650 6550
+Wire Wire Line
+	6650 6450 6650 6350
+Connection ~ 6650 6450
+Wire Wire Line
+	6650 6350 6650 6250
+Connection ~ 6650 6350
+Wire Wire Line
+	6650 6250 6650 6150
+Connection ~ 6650 6250
+Wire Wire Line
+	6650 6150 6650 6050
+Connection ~ 6650 6150
+Wire Wire Line
+	6650 6050 6650 5950
+Connection ~ 6650 6050
+Wire Wire Line
+	6650 5950 6650 5850
+Connection ~ 6650 5950
+Wire Wire Line
+	6650 5850 6650 5750
+Connection ~ 6650 5850
+Wire Wire Line
+	6650 5750 6650 5650
+Connection ~ 6650 5750
+Wire Wire Line
+	6650 5650 6650 5550
+Connection ~ 6650 5650
+Wire Wire Line
+	6650 5550 6650 5450
+Connection ~ 6650 5550
+Wire Wire Line
+	6650 5450 6650 5350
+Connection ~ 6650 5450
+Wire Wire Line
+	6650 5350 6650 5250
+Connection ~ 6650 5350
+Wire Wire Line
+	6650 5250 6650 5150
+Connection ~ 6650 5250
+Wire Wire Line
+	6650 5150 6650 5050
+Connection ~ 6650 5150
+Wire Wire Line
+	6650 5050 6650 4950
+Connection ~ 6650 5050
+Wire Wire Line
+	6650 4950 6650 4850
+Connection ~ 6650 4950
+Wire Wire Line
+	6650 4850 6650 4750
+Connection ~ 6650 4850
+Wire Wire Line
+	6650 4750 6650 4650
+Connection ~ 6650 4750
+Connection ~ 6650 4650
+Wire Wire Line
+	6650 3850 6650 4650
+Wire Wire Line
+	5800 3850 6000 3850
+Wire Wire Line
+	6000 3850 6200 3850
+Connection ~ 6000 3850
+Wire Wire Line
+	6200 3850 6650 3850
+Connection ~ 6200 3850
+$Comp
+L power:+5V #PWR010
+U 1 1 5BC377F6
+P 6650 3750
+F 0 "#PWR010" H 6650 3600 50  0001 C CNN
+F 1 "+5V" H 6665 3923 50  0000 C CNN
+F 2 "" H 6650 3750 50  0001 C CNN
+F 3 "" H 6650 3750 50  0001 C CNN
+	1    6650 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 3750 6650 3850
+Connection ~ 6650 3850
+$Comp
+L Connector:TestPoint TP4
+U 1 1 5BC49A4E
+P 3000 5750
+F 0 "TP4" V 3000 6000 50  0000 C CNN
+F 1 "TestPoint" V 3104 5824 50  0001 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 3200 5750 50  0001 C CNN
+F 3 "~" H 3200 5750 50  0001 C CNN
+	1    3000 5750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:CP C10
+U 1 1 5BC5DDE4
+P 7100 4650
+F 0 "C10" V 7352 4650 50  0000 C CNN
+F 1 "3.3uF" V 7261 4650 50  0000 C CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 7138 4500 50  0001 C CNN
+F 3 "~" H 7100 4650 50  0001 C CNN
+	1    7100 4650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:CP C11
+U 1 1 5BC5DF41
+P 7100 5250
+F 0 "C11" V 7352 5250 50  0000 C CNN
+F 1 "3.3uF" V 7261 5250 50  0000 C CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 7138 5100 50  0001 C CNN
+F 3 "~" H 7100 5250 50  0001 C CNN
+	1    7100 5250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:CP C12
+U 1 1 5BC5DFD7
+P 7100 5850
+F 0 "C12" V 7352 5850 50  0000 C CNN
+F 1 "3.3uF" V 7261 5850 50  0000 C CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 7138 5700 50  0001 C CNN
+F 3 "~" H 7100 5850 50  0001 C CNN
+	1    7100 5850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:CP C13
+U 1 1 5BC5E06D
+P 7100 6450
+F 0 "C13" V 7352 6450 50  0000 C CNN
+F 1 "3.3uF" V 7261 6450 50  0000 C CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 7138 6300 50  0001 C CNN
+F 3 "~" H 7100 6450 50  0001 C CNN
+	1    7100 6450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4050 5750 3000 5750
+$Comp
+L Device:CP C8
+U 1 1 5BC87BDF
+P 3700 4650
+F 0 "C8" H 3700 4550 50  0000 L CNN
+F 1 "3.3uF" H 3700 4750 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_4x5.4" H 3738 4500 50  0001 C CNN
+F 3 "~" H 3700 4650 50  0001 C CNN
+	1    3700 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 4500 3700 4050
+Wire Wire Line
+	3700 4050 3950 4050
+Connection ~ 3950 4050
+Wire Wire Line
+	3700 4800 3700 6950
+Wire Wire Line
+	3700 6950 3950 6950
+Connection ~ 3950 6950
+Wire Wire Line
+	6650 4650 6950 4650
+Wire Wire Line
+	6650 5250 6950 5250
+Wire Wire Line
+	6650 5850 6950 5850
+Wire Wire Line
+	6650 6450 6950 6450
+Wire Wire Line
+	7250 6450 7250 5850
+Wire Wire Line
+	7250 5850 7250 5250
+Connection ~ 7250 5850
+Wire Wire Line
+	7250 5250 7250 4650
+Connection ~ 7250 5250
+Wire Wire Line
+	7250 6450 7400 6450
+Connection ~ 7250 6450
+$Comp
+L power:GND #PWR013
+U 1 1 5BCE1A99
+P 7400 6450
+F 0 "#PWR013" H 7400 6200 50  0001 C CNN
+F 1 "GND" H 7405 6277 50  0000 C CNN
+F 2 "" H 7400 6450 50  0001 C CNN
+F 3 "" H 7400 6450 50  0001 C CNN
+	1    7400 6450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R7
+U 1 1 5BCEA2FD
+P 3900 2700
+F 0 "R7" H 3970 2746 50  0000 L CNN
+F 1 "10K" H 3970 2655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3830 2700 50  0001 C CNN
+F 3 "" H 3900 2700 50  0001 C CNN
+	1    3900 2700
+	1    0    0    -1  
+$EndComp
+Connection ~ 4050 2900
+Wire Wire Line
+	4050 2900 4400 2900
+$Comp
+L power:+3V3 #PWR05
+U 1 1 5BCF1FED
+P 3900 2550
+F 0 "#PWR05" H 3900 2400 50  0001 C CNN
+F 1 "+3V3" H 3900 2700 50  0000 C CNN
+F 2 "" H 3900 2550 50  0001 C CNN
+F 3 "" H 3900 2550 50  0001 C CNN
+	1    3900 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C7
+U 1 1 5BD02333
+P 4050 3100
+F 0 "C7" H 4165 3146 50  0000 L CNN
+F 1 "DNP" H 4165 3055 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4088 2950 50  0001 C CNN
+F 3 "~" H 4050 3100 50  0001 C CNN
+	1    4050 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR09
+U 1 1 5BD0254A
+P 4050 3300
+F 0 "#PWR09" H 4050 3050 50  0001 C CNN
+F 1 "GND" H 4055 3127 50  0000 C CNN
+F 2 "" H 4050 3300 50  0001 C CNN
+F 3 "" H 4050 3300 50  0001 C CNN
+	1    4050 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4050 3000 4050 2950
+$Comp
+L Diode:MBR0520LT D1
+U 1 1 5BD3A926
+P 3750 2700
+F 0 "D1" V 3750 2550 50  0000 L CNN
+F 1 "MBR0520LT" V 3795 2779 50  0001 L CNN
+F 2 "christmas-tree:D_SOD-123_AK" H 3750 2700 50  0001 C CNN
+F 3 "~" H 3750 2700 50  0001 C CNN
+	1    3750 2700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3750 2550 3900 2550
+Connection ~ 3900 2550
+Wire Wire Line
+	3900 2850 3900 2900
+Connection ~ 3900 2900
+Wire Wire Line
+	3900 2900 4050 2900
+Text Notes 3000 700  0    50   ~ 0
+R1-R6 1M
+Wire Wire Line
+	2750 2100 3750 2100
+Wire Wire Line
+	2750 2300 3850 2300
+Wire Wire Line
+	2750 1700 2950 1700
+Wire Wire Line
+	2950 1700 2950 1300
+Wire Wire Line
+	2950 800  3000 800 
+Wire Wire Line
+	3300 800  3350 800 
+Wire Wire Line
+	2950 900  3000 900 
+Connection ~ 2950 900 
+Wire Wire Line
+	2950 900  2950 800 
+Wire Wire Line
+	3300 900  3450 900 
+Wire Wire Line
+	2950 1000 3000 1000
+Wire Wire Line
+	3300 1000 3550 1000
+Wire Wire Line
+	3300 1100 3650 1100
+Wire Wire Line
+	3300 1200 3750 1200
+Connection ~ 2950 1000
+Wire Wire Line
+	2950 1000 2950 900 
+Wire Wire Line
+	2950 1100 3000 1100
+Connection ~ 2950 1100
+Wire Wire Line
+	2950 1100 2950 1000
+Wire Wire Line
+	2950 1200 3000 1200
+Connection ~ 2950 1200
+Wire Wire Line
+	2950 1200 2950 1100
+Wire Wire Line
+	2950 1300 3000 1300
+Connection ~ 2950 1300
+Wire Wire Line
+	2950 1300 2950 1200
+Wire Wire Line
+	3350 1800 3350 1700
+Connection ~ 3350 800 
+Wire Wire Line
+	3350 800  4300 800 
+Wire Wire Line
+	3450 1900 3450 1700
+Connection ~ 3450 900 
+Wire Wire Line
+	3450 900  4300 900 
+Wire Wire Line
+	3550 2000 3550 1700
+Connection ~ 3550 1000
+Wire Wire Line
+	3550 1000 4300 1000
+Wire Wire Line
+	3650 2400 3650 1700
+Connection ~ 3650 1100
+Wire Wire Line
+	3650 1100 4300 1100
+Connection ~ 3750 1200
+Wire Wire Line
+	3750 1200 4300 1200
+Connection ~ 3850 2300
+Text Label 2750 1700 0    50   ~ 0
+OCHG
+$Comp
+L Diode:MBR0520LT D24
+U 1 1 5BFFB8E8
+P 7050 2200
+F 0 "D24" H 7050 1984 50  0000 C CNN
+F 1 "MBR0520LT" H 7050 2075 50  0000 C CNN
+F 2 "christmas-tree:D_SOD-123_AK" H 7050 2025 50  0001 C CNN
+F 3 "http://www.onsemi.com/pub_link/Collateral/MBR0520LT1-D.PDF" H 7050 2200 50  0001 C CNN
+	1    7050 2200
+	-1   0    0    1   
+$EndComp
+Connection ~ 7600 2200
+Wire Wire Line
+	6100 2850 6850 2850
+Wire Wire Line
+	7700 2600 7700 2850
+$Comp
+L Device:D_TVS D25
+U 1 1 5C054B75
+P 6850 2500
+F 0 "D25" V 6896 2421 50  0000 R CNN
+F 1 "SMAJ7.0CA" V 6805 2421 50  0000 R CNN
+F 2 "Diode_SMD:D_SMA_Handsoldering" H 6850 2500 50  0001 C CNN
+F 3 "~" H 6850 2500 50  0001 C CNN
+	1    6850 2500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6850 2350 6850 2200
+Connection ~ 6850 2200
+Wire Wire Line
+	6850 2200 6900 2200
+Wire Wire Line
+	6850 2650 6850 2850
+Connection ~ 6850 2850
+Wire Wire Line
+	6850 2850 7700 2850
+Text Label 2750 2100 0    50   ~ 0
+SCK
+Text Label 2750 2200 0    50   ~ 0
+MISO
+Text Label 2750 2300 0    50   ~ 0
+MOSI
+Text Label 2750 2400 0    50   ~ 0
+O4S
+Text Label 2750 2000 0    50   ~ 0
+O3S
+Text Label 2750 1900 0    50   ~ 0
+O2S
+Text Label 2750 1800 0    50   ~ 0
+O1S
+Text Label 3750 5250 0    50   ~ 0
+IREF
+Text Label 3750 5350 0    50   ~ 0
+BLANK
+Text Label 3750 5450 0    50   ~ 0
+XLAT
+Text Label 3750 5550 0    50   ~ 0
+LEDCLK
+Text Label 3750 5750 0    50   ~ 0
+LEDDOUT
+Text Label 2750 2900 0    50   ~ 0
+RST#
+Text Label 5550 1400 1    50   ~ 0
+JCPWR
+Connection ~ 7700 2850
+$Comp
+L christmas-tree:Logo_Merry_Christmas LOGO1
+U 1 1 5BB771BA
+P 9100 6150
+F 0 "LOGO1" H 9100 6300 50  0001 C CNN
+F 1 "Logo_Merry_Christmas" H 9100 6000 50  0001 C CNN
+F 2 "christmas-tree:merry-christmas" H 9100 6150 50  0001 C CNN
+F 3 "~" H 9100 6150 50  0001 C CNN
+	1    9100 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR0101
+U 1 1 5BB7BAD4
+P 5550 900
+F 0 "#PWR0101" H 5550 750 50  0001 C CNN
+F 1 "+3.3V" H 5565 1073 50  0000 C CNN
+F 2 "" H 5550 900 50  0001 C CNN
+F 3 "" H 5550 900 50  0001 C CNN
+	1    5550 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP7
+U 1 1 5BC4817B
+P 9650 2200
+F 0 "TP7" V 9604 2388 50  0000 L CNN
+F 1 "TestPoint" V 9695 2388 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 9850 2200 50  0001 C CNN
+F 3 "~" H 9850 2200 50  0001 C CNN
+	1    9650 2200
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP6
+U 1 1 5BC4849C
+P 7600 1750
+F 0 "TP6" H 7658 1870 50  0000 L CNN
+F 1 "TestPoint" H 7658 1779 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.0x2.0mm" H 7800 1750 50  0001 C CNN
+F 3 "~" H 7800 1750 50  0001 C CNN
+	1    7600 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP8
+U 1 1 5BC671F6
+P 9650 2850
+F 0 "TP8" V 9604 3038 50  0000 L CNN
+F 1 "TestPoint" V 9695 3038 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D4.0mm" H 9850 2850 50  0001 C CNN
+F 3 "~" H 9850 2850 50  0001 C CNN
+	1    9650 2850
+	0    1    1    0   
+$EndComp
+Connection ~ 9650 2850
+Wire Wire Line
+	8050 2050 8050 2200
+Wire Wire Line
+	7600 1750 7600 2200
+Wire Wire Line
+	6400 2200 6500 2200
+$Comp
+L Graphic:SYM_Arrow45_Tiny FID3
+U 1 1 5BCC042C
+P 8700 5800
+F 0 "FID3" H 8860 5850 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8700 5730 50  0001 C CNN
+F 2 "Fiducial:Fiducial_1mm_Dia_2.54mm_Outer_CopperTop" H 8700 5800 50  0001 C CNN
+F 3 "~" H 8700 5800 50  0001 C CNN
+	1    8700 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny FID2
+U 1 1 5BCC0513
+P 8800 5800
+F 0 "FID2" H 8960 5850 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8800 5730 50  0001 C CNN
+F 2 "Fiducial:Fiducial_1mm_Dia_2.54mm_Outer_CopperTop" H 8800 5800 50  0001 C CNN
+F 3 "~" H 8800 5800 50  0001 C CNN
+	1    8800 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny FID1
+U 1 1 5BCC05AC
+P 8900 5800
+F 0 "FID1" H 9060 5850 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8900 5730 50  0001 C CNN
+F 2 "Fiducial:Fiducial_1mm_Dia_2.54mm_Outer_CopperTop" H 8900 5800 50  0001 C CNN
+F 3 "~" H 8900 5800 50  0001 C CNN
+	1    8900 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN1
+U 1 1 5BCF668E
+P 8700 5350
+F 0 "DORN1" H 8860 5400 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8700 5280 50  0001 C CNN
+F 2 "christmas-tree:star" H 8700 5350 50  0001 C CNN
+F 3 "~" H 8700 5350 50  0001 C CNN
+	1    8700 5350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7700 2850 8050 2850
+Wire Wire Line
+	8050 2800 8050 2850
+Connection ~ 8050 2850
+Wire Wire Line
+	8050 2850 8700 2850
+$Comp
+L Connector:TestPoint TP10
+U 1 1 5BD24129
+P 3650 3000
+F 0 "TP10" H 3592 3027 50  0000 R CNN
+F 1 "RST#" H 3592 3118 50  0000 R CNN
+F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 3850 3000 50  0001 C CNN
+F 3 "~" H 3850 3000 50  0001 C CNN
+	1    3650 3000
+	-1   0    0    1   
+$EndComp
+Text Notes 8100 5250 0    50   ~ 0
+PCB Decorations (arrows shown here, footprints on PCB)
+$Comp
+L Device:R R9
+U 1 1 5BDAA103
+P 7400 2200
+F 0 "R9" V 7193 2200 50  0000 C CNN
+F 1 "0" V 7284 2200 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7330 2200 50  0001 C CNN
+F 3 "~" H 7400 2200 50  0001 C CNN
+	1    7400 2200
+	0    1    1    0   
+$EndComp
+Text Notes 6350 1850 0    50   ~ 0
+Replace R9 with shunt for inrush\ncurrent sensing.\n0.01 ohm for 5mV/100mA\n0.05 ohm for 25mV/100mA\nLimit to 1/8W for 1.5A inrush.
+Text Notes 7450 3150 0    50   ~ 0
+C3-C4 are near a flexible part of the board.\nPlace in series to prevent shorts from\ncracking; keep ratings high
+$Comp
+L Device:D D26
+U 1 1 5BDD0F1D
+P 8700 1850
+F 0 "D26" H 8700 2066 50  0000 C CNN
+F 1 "DNP" H 8700 1975 50  0000 C CNN
+F 2 "christmas-tree:D_SOD-123_AK" H 8700 1850 50  0001 C CNN
+F 3 "~" H 8700 1850 50  0001 C CNN
+	1    8700 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8550 1850 8350 1850
+Wire Wire Line
+	8350 1850 8350 2200
+Connection ~ 8350 2200
+Wire Wire Line
+	8350 2200 8400 2200
+Wire Wire Line
+	8850 1850 9200 1850
+Wire Wire Line
+	9200 1850 9200 2200
+Connection ~ 8050 2200
+Wire Wire Line
+	7600 2200 7700 2200
+Wire Wire Line
+	7550 2200 7600 2200
+Wire Wire Line
+	7200 2200 7250 2200
+Text Notes 8350 1500 0    50   ~ 0
+The LT1129 LDO doesn't need a\nreverse protection diode.  If the regulator\nis changed, populate D26.
+Wire Wire Line
+	7700 2300 7700 2200
+Connection ~ 7700 2200
+Wire Wire Line
+	7700 2200 8050 2200
+Connection ~ 3750 2100
+Wire Wire Line
+	3300 1300 3850 1300
+Connection ~ 3850 1300
+Wire Wire Line
+	3850 1300 4300 1300
+$Comp
+L Device:R R10
+U 1 1 5BF45CCC
+P 3350 1550
+F 0 "R10" V 3350 1500 50  0000 L CNN
+F 1 "50" H 3420 1505 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3280 1550 50  0001 C CNN
+F 3 "~" H 3350 1550 50  0001 C CNN
+	1    3350 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3350 1400 3350 800 
+$Comp
+L Device:R R11
+U 1 1 5BF45FBF
+P 3450 1550
+F 0 "R11" V 3450 1500 50  0000 L CNN
+F 1 "50" H 3520 1505 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3380 1550 50  0001 C CNN
+F 3 "~" H 3450 1550 50  0001 C CNN
+	1    3450 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 1400 3450 900 
+$Comp
+L Device:R R12
+U 1 1 5BF4606B
+P 3550 1550
+F 0 "R12" V 3550 1500 50  0000 L CNN
+F 1 "50" H 3620 1505 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3480 1550 50  0001 C CNN
+F 3 "~" H 3550 1550 50  0001 C CNN
+	1    3550 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 1400 3550 1000
+$Comp
+L Device:R R13
+U 1 1 5BF46119
+P 3650 1550
+F 0 "R13" V 3650 1500 50  0000 L CNN
+F 1 "50" H 3720 1505 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3580 1550 50  0001 C CNN
+F 3 "~" H 3650 1550 50  0001 C CNN
+	1    3650 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 1400 3650 1100
+$Comp
+L Device:R R14
+U 1 1 5BF461C9
+P 3750 1550
+F 0 "R14" V 3750 1500 50  0000 L CNN
+F 1 "50" H 3820 1505 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3680 1550 50  0001 C CNN
+F 3 "~" H 3750 1550 50  0001 C CNN
+	1    3750 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3750 1400 3750 1200
+$Comp
+L Device:R R15
+U 1 1 5BF4627B
+P 3850 1550
+F 0 "R15" V 3850 1500 50  0000 L CNN
+F 1 "50" H 3920 1505 50  0001 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3780 1550 50  0001 C CNN
+F 3 "~" H 3850 1550 50  0001 C CNN
+	1    3850 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 1400 3850 1300
+Wire Wire Line
+	3750 2100 4050 2100
+Text Notes 3950 1550 0    50   ~ 0
+R10-R15 50ohm\nfor ESD
+Wire Wire Line
+	5550 1350 5550 1200
+Wire Wire Line
+	8050 2200 8350 2200
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN2
+U 1 1 5BFD59FD
+P 8700 5500
+F 0 "DORN2" H 8860 5550 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8700 5430 50  0001 C CNN
+F 2 "christmas-tree:stocking" H 8700 5500 50  0001 C CNN
+F 3 "~" H 8700 5500 50  0001 C CNN
+	1    8700 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN3
+U 1 1 5BFD5AA6
+P 8700 5650
+F 0 "DORN3" H 8860 5700 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8700 5580 50  0001 C CNN
+F 2 "christmas-tree:candy-cane" H 8700 5650 50  0001 C CNN
+F 3 "~" H 8700 5650 50  0001 C CNN
+	1    8700 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN4
+U 1 1 5BFD5FCF
+P 8800 5650
+F 0 "DORN4" H 8960 5700 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8800 5580 50  0001 C CNN
+F 2 "christmas-tree:candy-cane-mirror" H 8800 5650 50  0001 C CNN
+F 3 "~" H 8800 5650 50  0001 C CNN
+	1    8800 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN5
+U 1 1 5BFD6078
+P 8900 5650
+F 0 "DORN5" H 9060 5700 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8900 5580 50  0001 C CNN
+F 2 "christmas-tree:candy-cane" H 8900 5650 50  0001 C CNN
+F 3 "~" H 8900 5650 50  0001 C CNN
+	1    8900 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN6
+U 1 1 5BFD6121
+P 9000 5650
+F 0 "DORN6" H 9160 5700 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 9000 5580 50  0001 C CNN
+F 2 "christmas-tree:candy-cane-mirror" H 9000 5650 50  0001 C CNN
+F 3 "~" H 9000 5650 50  0001 C CNN
+	1    9000 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN7
+U 1 1 5BFD6BFE
+P 8700 5950
+F 0 "DORN7" H 8860 6000 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8700 5880 50  0001 C CNN
+F 2 "christmas-tree:snowflake" H 8700 5950 50  0001 C CNN
+F 3 "~" H 8700 5950 50  0001 C CNN
+	1    8700 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN8
+U 1 1 5BFD77C1
+P 8800 5950
+F 0 "DORN8" H 8960 6000 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8800 5880 50  0001 C CNN
+F 2 "christmas-tree:snowflake" H 8800 5950 50  0001 C CNN
+F 3 "~" H 8800 5950 50  0001 C CNN
+	1    8800 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN9
+U 1 1 5BFD786A
+P 8900 5950
+F 0 "DORN9" H 9060 6000 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 8900 5880 50  0001 C CNN
+F 2 "christmas-tree:snowflake" H 8900 5950 50  0001 C CNN
+F 3 "~" H 8900 5950 50  0001 C CNN
+	1    8900 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN10
+U 1 1 5BFD7A0A
+P 9000 5950
+F 0 "DORN10" H 9160 6000 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 9000 5880 50  0001 C CNN
+F 2 "christmas-tree:snowflake" H 9000 5950 50  0001 C CNN
+F 3 "~" H 9000 5950 50  0001 C CNN
+	1    9000 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN11
+U 1 1 5BFD7AB3
+P 9100 5950
+F 0 "DORN11" H 9260 6000 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 9100 5880 50  0001 C CNN
+F 2 "christmas-tree:snowflake" H 9100 5950 50  0001 C CNN
+F 3 "~" H 9100 5950 50  0001 C CNN
+	1    9100 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:Logo_Open_Hardware_Small #LOGO1
+U 1 1 5BFEDA88
+P 8300 5600
+F 0 "#LOGO1" H 8300 5875 50  0001 C CNN
+F 1 "Logo_Open_Hardware_Small" H 8300 5375 50  0001 C CNN
+F 2 "Symbol:OSHW-Logo2_7.3x6mm_SilkScreen" H 8300 5600 50  0001 C CNN
+F 3 "~" H 8300 5600 50  0001 C CNN
+	1    8300 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN12
+U 1 1 5BFEDF9A
+P 9350 5350
+F 0 "DORN12" H 9510 5400 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 9350 5280 50  0001 C CNN
+F 2 "Symbol:OSHW-Logo2_7.3x6mm_SilkScreen" H 9350 5350 50  0001 C CNN
+F 3 "~" H 9350 5350 50  0001 C CNN
+	1    9350 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:SYM_Arrow45_Tiny DORN13
+U 1 1 5BFEE637
+P 9350 5500
+F 0 "DORN13" H 9510 5550 50  0001 C CNN
+F 1 "SYM_Arrow45_Tiny" H 9350 5430 50  0001 C CNN
+F 2 "christmas-tree:wreath" H 9350 5500 50  0001 C CNN
+F 3 "~" H 9350 5500 50  0001 C CNN
+	1    9350 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:AVR-ISP-6 J3
+U 1 1 5BFF0A5C
+P 5150 3250
+F 0 "J3" H 4870 3346 50  0000 R CNN
+F 1 "AVR-ISP-6" H 4870 3255 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" V 4900 3300 50  0001 C CNN
+F 3 " ~" H 3875 2700 50  0001 C CNN
+	1    5150 3250
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 2300 4050 2300
+Wire Wire Line
+	4850 2400 4850 1850
+Wire Wire Line
+	4850 1850 5050 1850
+Wire Wire Line
+	4400 2400 4500 2400
+Wire Wire Line
+	4950 1950 5050 1950
+Wire Wire Line
+	4400 2500 4950 2500
+Wire Wire Line
+	5250 2750 5250 2650
+Text Label 5250 2800 1    50   ~ 0
+ISPPWR
+Wire Wire Line
+	4950 2500 4950 1950
+Wire Wire Line
+	3650 3000 3650 2900
+Connection ~ 3650 2900
+Wire Wire Line
+	3650 2900 3750 2900
+Wire Wire Line
+	4400 2900 4400 3350
+Wire Wire Line
+	4400 3350 4750 3350
+Connection ~ 4400 2900
+Wire Wire Line
+	4750 3250 4500 3250
+Wire Wire Line
+	4500 3250 4500 2400
+Connection ~ 4500 2400
+Wire Wire Line
+	4500 2400 4850 2400
+Wire Wire Line
+	4750 3150 4600 3150
+Wire Wire Line
+	4600 1750 5050 1750
+Wire Wire Line
+	4600 2300 4600 3150
+Wire Wire Line
+	4700 2200 4700 1650
+Wire Wire Line
+	3250 2200 4700 2200
+Wire Wire Line
+	4700 1650 5050 1650
+Wire Wire Line
+	4600 1750 4600 2300
+Connection ~ 4600 2300
+Wire Wire Line
+	4750 3050 4700 3050
+Wire Wire Line
+	4700 3050 4700 2200
+Connection ~ 4700 2200
+$Comp
+L power:GND #PWR0102
+U 1 1 5C159427
+P 5250 3650
+F 0 "#PWR0102" H 5250 3400 50  0001 C CNN
+F 1 "GND" H 5255 3477 50  0000 C CNN
+F 2 "" H 5250 3650 50  0001 C CNN
+F 3 "" H 5250 3650 50  0001 C CNN
+	1    5250 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Jumper:SolderJumper_2_Bridged JP4
+U 1 1 5C1B1B6A
+P 5250 2500
+F 0 "JP4" V 5250 2568 50  0000 L CNN
+F 1 "SolderJumper_2_Bridged" V 5295 2568 50  0001 L CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm" H 5250 2500 50  0001 C CNN
+F 3 "~" H 5250 2500 50  0001 C CNN
+	1    5250 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3.3V #PWR0103
+U 1 1 5C1BE60D
+P 5250 2350
+F 0 "#PWR0103" H 5250 2200 50  0001 C CNN
+F 1 "+3.3V" H 5265 2523 50  0000 C CNN
+F 2 "" H 5250 2350 50  0001 C CNN
+F 3 "" H 5250 2350 50  0001 C CNN
+	1    5250 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R16
+U 1 1 5C1CBA70
+P 4200 2100
+F 0 "R16" V 3993 2100 50  0000 C CNN
+F 1 "100" V 4084 2100 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4130 2100 50  0001 C CNN
+F 3 "~" H 4200 2100 50  0001 C CNN
+	1    4200 2100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3750 2850 3750 2900
+Connection ~ 3750 2900
+Wire Wire Line
+	3750 2900 3900 2900
+$Comp
+L Device:R R17
+U 1 1 5C20B841
+P 4200 2300
+F 0 "R17" V 4300 2300 50  0000 C CNN
+F 1 "100" V 4400 2300 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4130 2300 50  0001 C CNN
+F 3 "~" H 4200 2300 50  0001 C CNN
+	1    4200 2300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4350 2300 4600 2300
+Wire Wire Line
+	4400 2100 4400 2400
+Wire Wire Line
+	4350 2100 4400 2100
+Text Label 5050 1850 2    50   ~ 0
+ISPSCK
+Text Label 5050 1750 2    50   ~ 0
+ISPMOSI
+Wire Wire Line
+	3350 2800 3350 5550
+Wire Wire Line
+	3450 2700 3450 5450
+Wire Wire Line
+	3550 2600 3550 5350
+Wire Wire Line
+	3850 1700 3850 2300
+Wire Wire Line
+	3750 1700 3750 2100
+Text Notes 3500 700  0    50   ~ 0
+Keep traces from cap sensors through R10-R15\nto uC short, direct, and away from LED modulation
+Text Notes 5800 1100 0    50   ~ 0
+Some programmers try to drive Vcc to 5V,\nbut most sense logic level on Vcc.\nCut JP3 and JP4 if needed.
+Text Notes 7400 4600 0    50   ~ 0
+C10-C13 are overkill for\nfiltering but are also\ndecorative as electrolytics.
+Text Notes 3550 3900 0    50   ~ 0
+C7 can be a reset cap, but\nmay prevent debugWIRE.\nNote ATtiny has a low-pass filter\non RST# line, so noise rejection\nisn't needed.
+Connection ~ 4050 2950
+Wire Wire Line
+	4050 2950 4050 2900
+Wire Wire Line
+	4050 3250 4050 3300
+Text Notes 3550 3300 0    50   ~ 0
+Ground TP10\nfor ext reset
+Text Notes 3950 1850 0    50   ~ 0
+Cut R16 and R17\nif ISP lines break\ncap sensing
+$Comp
+L christmas-tree:Logo_Love_Always LOGO2
+U 1 1 5BD90B09
+P 8950 6250
+F 0 "LOGO2" H 8950 6400 50  0001 L CNN
+F 1 "Logo_Merry_Christmas" H 8950 6100 50  0001 C CNN
+F 2 "christmas-tree:love-always" H 8950 6250 50  0001 C CNN
+F 3 "~" H 8950 6250 50  0001 C CNN
+	1    8950 6250
+	1    0    0    -1  
+$EndComp
+Text Notes 8950 1800 0    50   ~ 0
+Choose C5 based on U3's datasheet
+$EndSCHEMATC

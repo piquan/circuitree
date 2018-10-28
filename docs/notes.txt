@@ -1,0 +1,75 @@
+This is a decoration; the form is the function!
+
+First Law of Christmas Decorations: A decoration must not harm
+humans (such as by catching fire or causing anguish by burning out
+their computer's USB port).
+
+Second Law of Christmas Decorations: A decoration must look nice
+and blink its LEDs when the human wants it to, as long as this does
+not conflict with the First Law.
+
+Third Law of Christmas Decorations: A decoration must not harm
+itself (such as by blowing out its power filter when plugged into a
+cheap USB charger), as long as this does not conflict with the First
+or Second Law.
+
+Regarding the electrolytic capacitors: I'm using aluminum polymer for
+caps >1uF because they look more like decorations on a tree, rather
+than boring-looking MLCCs.  I'm avoiding wet electrolytics, since the
+worst thing would be for them to leak on grandma's Christmas
+decorations during storage.  Also avoiding tantalums to prevent
+burning down a nearby dead fir tree in the event of a failure.
+
+Using electrolytics means that the LDO voltage regulator selection is
+harder; most LDOs these days want a super-low ESR, or a narrow range,
+and electrolytics' ESRs are pretty variable.
+
+ESD is a concern with dry winter weather and sweaters, and capacitive
+touch sensors.  The leakage current and capacitance of TVS diodes is a
+problem on the cap sense lines, so this design uses series resistors
+instead (along with the AVR pin's parasitic capacitance) to slow dV/dt
+to the point that the pin's protection diodes are fast enough to keep
+ESD away from the pin's gate.  Not sure how well it'll work, but
+here's hoping.
+
+Keep the cap sense lines short and thin, and try to keep them away
+from other lines to prevent capacitive coupling.  Especially keep away
+from the LED cathode lines (which will be modulating at about 15mA @
+1kHz), and also the +5V line feeding them (which will be a bit
+smoother).
+
+Program with either the TagConnect connector or the .1" ISP header
+(with pogo pins http://sfe.io/p11591 or solder in a header).  Either
+one uses the same pinout as the Arduino's ICSP connector.  I use
+USBtinyISP http://adafru.it/46 at 100kHz SPI clock (the default).  Be
+sure your programmer is 3.3V safe, and don't have it feed the Vcc line
+(remove the jumper from the USBtinyISP).  The Vcc line here is
+connected to 3.3V; it can be disconnected altogether with JP3 and/or
+JP4.
+
+Be prepared to work with a cheap crappy USB charger that puts out 4.3V
+and is half ripple; use protection.  Don't blow out your uncle's
+laptop with ESD; use protection.  Supply suitable chargers with the
+devices.  And use protection.
+
+Keep protection close to the USB input; there's lots of places for
+liquid infil etc. to ruin your day.
+
+The USB spec says max 100mA before enumeration, and 500mA if it
+successfully enumerates for higher power.  We draw 500mA and never
+enumerate.  This seems common among cheap USB-powered toys.
+
+The USB spec says inrush current is limited to 10 uF // 44 ohms.  We
+ignore this and have about 25 uF inrush current.  This seems common;
+even the Arduino has 100 uF inrush current.
+
+Need to test against a few different motherboards to see if they
+trigger overcurrent warnings.
+
+This won't work with most USB batteries; it doesn't draw enough
+current to keep them awake.  (Move this design note to user notes.)
+
+Keep space for a shroud between the micro USB connector and the board
+edge.  So far, 0.6mm seems sufficient.
+
+See schematic for a few other notes.
