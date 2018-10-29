@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:christmas-tree-cache
 EELAYER 26 0
 EELAYER END
 $Descr USLetter 11000 8500
@@ -15,10 +14,10 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Connector:AVR-ISP-6 J1
+L Connector:AVR-ISP-6 J2
 U 1 1 5BAAE340
 P 5450 1850
-F 0 "J1" H 5170 1946 50  0000 R CNN
+F 0 "J2" H 5170 1946 50  0000 R CNN
 F 1 "TC2030" H 5170 1855 50  0000 R CNN
 F 2 "Connector:Tag-Connect_TC2030-IDC-FP_2x03_P1.27mm_Vertical" V 5200 1900 50  0001 C CNN
 F 3 " ~" H 4175 1300 50  0001 C CNN
@@ -30,11 +29,11 @@ Wire Wire Line
 Wire Wire Line
 	4400 2900 4400 2500
 $Comp
-L Jumper:SolderJumper_2_Bridged JP3
+L Jumper:SolderJumper_2_Bridged JP1
 U 1 1 5BAAE644
 P 5550 1050
-F 0 "JP3" V 5550 1118 50  0000 L CNN
-F 1 "SolderJumper_2_Bridged" V 5595 1118 50  0001 L CNN
+F 0 "JP1" V 5550 1150 50  0000 L CNN
+F 1 "JCPWR" V 5650 1150 50  0000 L CNN
 F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm" H 5550 1050 50  0001 C CNN
 F 3 "~" H 5550 1050 50  0001 C CNN
 	1    5550 1050
@@ -180,10 +179,10 @@ F 3 "~" H 4500 1300 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R8
+L Device:R R17
 U 1 1 5BACCA56
 P 3150 6000
-F 0 "R8" H 3220 6046 50  0000 L CNN
+F 0 "R17" H 3220 6046 50  0000 L CNN
 F 1 "2.7K" H 3220 5955 50  0000 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3080 6000 50  0001 C CNN
 F 3 "~" H 3150 6000 50  0001 C CNN
@@ -312,10 +311,10 @@ F 3 "~" H 3150 1200 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Connector:USB_B_Micro J2
+L Connector:USB_B_Micro J1
 U 1 1 5BAFC535
 P 6100 2400
-F 0 "J2" H 6155 2867 50  0000 C CNN
+F 0 "J1" H 6155 2867 50  0000 C CNN
 F 1 "USB_B_Micro" H 6155 2776 50  0000 C CNN
 F 2 "Connector_USB:USB_Micro-B_Molex_47346-0001" H 6250 2350 50  0001 C CNN
 F 3 "~" H 6250 2350 50  0001 C CNN
@@ -367,16 +366,16 @@ $EndComp
 $Comp
 L Device:Polyfuse F1
 U 1 1 5BB09C35
-P 6650 2200
-F 0 "F1" V 6425 2200 50  0000 C CNN
-F 1 "500mA" V 6516 2200 50  0000 C CNN
-F 2 "Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 6700 2000 50  0001 L CNN
-F 3 "~" H 6650 2200 50  0001 C CNN
-	1    6650 2200
+P 6600 2200
+F 0 "F1" V 6375 2200 50  0000 C CNN
+F 1 "500mA" V 6466 2200 50  0000 C CNN
+F 2 "Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 6650 2000 50  0001 L CNN
+F 3 "~" H 6600 2200 50  0001 C CNN
+	1    6600 2200
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	6800 2200 6850 2200
+	6750 2200 6850 2200
 Wire Wire Line
 	8700 2850 8700 2500
 $Comp
@@ -506,10 +505,10 @@ Connection ~ 2150 3250
 Wire Wire Line
 	2150 3250 2150 3200
 $Comp
-L Device:LED_RGB D2
+L Device:LED_RGB D1
 U 1 1 5BB7EF2E
 P 6000 4050
-F 0 "D2" H 6000 4547 50  0000 C CNN
+F 0 "D1" H 6000 4547 50  0000 C CNN
 F 1 "LED_RGB" H 6000 4456 50  0000 C CNN
 F 2 "LED_SMD:LED_RGB_5050-6" H 6000 4000 50  0001 C CNN
 F 3 "~" H 6000 4000 50  0001 C CNN
@@ -897,11 +896,11 @@ Wire Wire Line
 	6650 3750 6650 3850
 Connection ~ 6650 3850
 $Comp
-L Connector:TestPoint TP4
+L Connector:TestPoint TP6
 U 1 1 5BC49A4E
 P 3000 5750
-F 0 "TP4" V 3000 6000 50  0000 C CNN
-F 1 "TestPoint" V 3104 5824 50  0001 C CNN
+F 0 "TP6" V 3000 6000 50  0000 C CNN
+F 1 "LEDDOUT" V 2900 6100 50  0000 C CNN
 F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 3200 5750 50  0001 C CNN
 F 3 "~" H 3200 5750 50  0001 C CNN
 	1    3000 5750
@@ -1054,11 +1053,11 @@ $EndComp
 Wire Wire Line
 	4050 3000 4050 2950
 $Comp
-L Diode:MBR0520LT D1
+L Diode:MBR0520LT D24
 U 1 1 5BD3A926
 P 3750 2700
-F 0 "D1" V 3750 2550 50  0000 L CNN
-F 1 "MBR0520LT" V 3795 2779 50  0001 L CNN
+F 0 "D24" V 3650 2550 50  0000 L CNN
+F 1 "MBR0520L" V 3795 2779 50  0001 L CNN
 F 2 "christmas-tree:D_SOD-123_AK" H 3750 2700 50  0001 C CNN
 F 3 "~" H 3750 2700 50  0001 C CNN
 	1    3750 2700
@@ -1146,11 +1145,11 @@ Connection ~ 3850 2300
 Text Label 2750 1700 0    50   ~ 0
 OCHG
 $Comp
-L Diode:MBR0520LT D24
+L Diode:MBR0520LT D26
 U 1 1 5BFFB8E8
 P 7050 2200
-F 0 "D24" H 7050 1984 50  0000 C CNN
-F 1 "MBR0520LT" H 7050 2075 50  0000 C CNN
+F 0 "D26" H 7050 1984 50  0000 C CNN
+F 1 "MBR0520L" H 7050 2075 50  0000 C CNN
 F 2 "christmas-tree:D_SOD-123_AK" H 7050 2025 50  0001 C CNN
 F 3 "http://www.onsemi.com/pub_link/Collateral/MBR0520LT1-D.PDF" H 7050 2200 50  0001 C CNN
 	1    7050 2200
@@ -1234,33 +1233,33 @@ F 3 "" H 5550 900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint TP7
+L Connector:TestPoint TP3
 U 1 1 5BC4817B
 P 9650 2200
-F 0 "TP7" V 9604 2388 50  0000 L CNN
-F 1 "TestPoint" V 9695 2388 50  0000 L CNN
+F 0 "TP3" V 9604 2388 50  0000 L CNN
+F 1 "3V3" V 9695 2388 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 9850 2200 50  0001 C CNN
 F 3 "~" H 9850 2200 50  0001 C CNN
 	1    9650 2200
 	0    1    1    0   
 $EndComp
 $Comp
-L Connector:TestPoint TP6
+L Connector:TestPoint TP2
 U 1 1 5BC4849C
 P 7600 1750
-F 0 "TP6" H 7658 1870 50  0000 L CNN
-F 1 "TestPoint" H 7658 1779 50  0000 L CNN
+F 0 "TP2" H 7658 1870 50  0000 L CNN
+F 1 "5V" H 7658 1779 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Pad_2.0x2.0mm" H 7800 1750 50  0001 C CNN
 F 3 "~" H 7800 1750 50  0001 C CNN
 	1    7600 1750
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint TP8
+L Connector:TestPoint TP1
 U 1 1 5BC671F6
 P 9650 2850
-F 0 "TP8" V 9604 3038 50  0000 L CNN
-F 1 "TestPoint" V 9695 3038 50  0000 L CNN
+F 0 "TP1" V 9604 3038 50  0000 L CNN
+F 1 "GND" V 9695 3038 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Pad_D4.0mm" H 9850 2850 50  0001 C CNN
 F 3 "~" H 9850 2850 50  0001 C CNN
 	1    9650 2850
@@ -1272,7 +1271,7 @@ Wire Wire Line
 Wire Wire Line
 	7600 1750 7600 2200
 Wire Wire Line
-	6400 2200 6500 2200
+	6400 2200 6450 2200
 $Comp
 L Graphic:SYM_Arrow45_Tiny FID3
 U 1 1 5BCC042C
@@ -1325,10 +1324,10 @@ Connection ~ 8050 2850
 Wire Wire Line
 	8050 2850 8700 2850
 $Comp
-L Connector:TestPoint TP10
+L Connector:TestPoint TP4
 U 1 1 5BD24129
 P 3650 3000
-F 0 "TP10" H 3592 3027 50  0000 R CNN
+F 0 "TP4" H 3592 3027 50  0000 R CNN
 F 1 "RST#" H 3592 3118 50  0000 R CNN
 F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 3850 3000 50  0001 C CNN
 F 3 "~" H 3850 3000 50  0001 C CNN
@@ -1338,10 +1337,10 @@ $EndComp
 Text Notes 8100 5250 0    50   ~ 0
 PCB Decorations (arrows shown here, footprints on PCB)
 $Comp
-L Device:R R9
+L Device:R R10
 U 1 1 5BDAA103
 P 7400 2200
-F 0 "R9" V 7193 2200 50  0000 C CNN
+F 0 "R10" V 7193 2200 50  0000 C CNN
 F 1 "0" V 7284 2200 50  0000 C CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7330 2200 50  0001 C CNN
 F 3 "~" H 7400 2200 50  0001 C CNN
@@ -1349,14 +1348,14 @@ F 3 "~" H 7400 2200 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text Notes 6350 1850 0    50   ~ 0
-Replace R9 with shunt for inrush\ncurrent sensing.\n0.01 ohm for 5mV/100mA\n0.05 ohm for 25mV/100mA\nLimit to 1/8W for 1.5A inrush.
+Replace R10 with shunt for inrush\ncurrent sensing.\n0.01 ohm for 5mV/100mA\n0.05 ohm for 25mV/100mA\nLimit to 1/8W for 1.5A inrush.
 Text Notes 7450 3150 0    50   ~ 0
 C3-C4 are near a flexible part of the board.\nPlace in series to prevent shorts from\ncracking; keep ratings high
 $Comp
-L Device:D D26
+L Device:D D27
 U 1 1 5BDD0F1D
 P 8700 1850
-F 0 "D26" H 8700 2066 50  0000 C CNN
+F 0 "D27" H 8700 2066 50  0000 C CNN
 F 1 "DNP" H 8700 1975 50  0000 C CNN
 F 2 "christmas-tree:D_SOD-123_AK" H 8700 1850 50  0001 C CNN
 F 3 "~" H 8700 1850 50  0001 C CNN
@@ -1382,7 +1381,7 @@ Wire Wire Line
 Wire Wire Line
 	7200 2200 7250 2200
 Text Notes 8350 1500 0    50   ~ 0
-The LT1129 LDO doesn't need a\nreverse protection diode.  If the regulator\nis changed, populate D26.
+The LT1129 LDO doesn't need a\nreverse protection diode.  If the regulator\nis changed, populate D27.
 Wire Wire Line
 	7700 2300 7700 2200
 Connection ~ 7700 2200
@@ -1395,10 +1394,10 @@ Connection ~ 3850 1300
 Wire Wire Line
 	3850 1300 4300 1300
 $Comp
-L Device:R R10
+L Device:R R11
 U 1 1 5BF45CCC
 P 3350 1550
-F 0 "R10" V 3350 1500 50  0000 L CNN
+F 0 "R11" V 3350 1500 50  0000 L CNN
 F 1 "50" H 3420 1505 50  0001 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3280 1550 50  0001 C CNN
 F 3 "~" H 3350 1550 50  0001 C CNN
@@ -1408,10 +1407,10 @@ $EndComp
 Wire Wire Line
 	3350 1400 3350 800 
 $Comp
-L Device:R R11
+L Device:R R12
 U 1 1 5BF45FBF
 P 3450 1550
-F 0 "R11" V 3450 1500 50  0000 L CNN
+F 0 "R12" V 3450 1500 50  0000 L CNN
 F 1 "50" H 3520 1505 50  0001 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3380 1550 50  0001 C CNN
 F 3 "~" H 3450 1550 50  0001 C CNN
@@ -1421,10 +1420,10 @@ $EndComp
 Wire Wire Line
 	3450 1400 3450 900 
 $Comp
-L Device:R R12
+L Device:R R13
 U 1 1 5BF4606B
 P 3550 1550
-F 0 "R12" V 3550 1500 50  0000 L CNN
+F 0 "R13" V 3550 1500 50  0000 L CNN
 F 1 "50" H 3620 1505 50  0001 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3480 1550 50  0001 C CNN
 F 3 "~" H 3550 1550 50  0001 C CNN
@@ -1434,10 +1433,10 @@ $EndComp
 Wire Wire Line
 	3550 1400 3550 1000
 $Comp
-L Device:R R13
+L Device:R R14
 U 1 1 5BF46119
 P 3650 1550
-F 0 "R13" V 3650 1500 50  0000 L CNN
+F 0 "R14" V 3650 1500 50  0000 L CNN
 F 1 "50" H 3720 1505 50  0001 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3580 1550 50  0001 C CNN
 F 3 "~" H 3650 1550 50  0001 C CNN
@@ -1447,10 +1446,10 @@ $EndComp
 Wire Wire Line
 	3650 1400 3650 1100
 $Comp
-L Device:R R14
+L Device:R R15
 U 1 1 5BF461C9
 P 3750 1550
-F 0 "R14" V 3750 1500 50  0000 L CNN
+F 0 "R15" V 3750 1500 50  0000 L CNN
 F 1 "50" H 3820 1505 50  0001 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3680 1550 50  0001 C CNN
 F 3 "~" H 3750 1550 50  0001 C CNN
@@ -1460,10 +1459,10 @@ $EndComp
 Wire Wire Line
 	3750 1400 3750 1200
 $Comp
-L Device:R R15
+L Device:R R16
 U 1 1 5BF4627B
 P 3850 1550
-F 0 "R15" V 3850 1500 50  0000 L CNN
+F 0 "R16" V 3850 1500 50  0000 L CNN
 F 1 "50" H 3920 1505 50  0001 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 3780 1550 50  0001 C CNN
 F 3 "~" H 3850 1550 50  0001 C CNN
@@ -1475,7 +1474,7 @@ Wire Wire Line
 Wire Wire Line
 	3750 2100 4050 2100
 Text Notes 3950 1550 0    50   ~ 0
-R10-R15 50ohm\nfor ESD
+R11-R16 50ohm\nfor ESD
 Wire Wire Line
 	5550 1350 5550 1200
 Wire Wire Line
@@ -1701,11 +1700,11 @@ F 3 "" H 5250 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Jumper:SolderJumper_2_Bridged JP4
+L Jumper:SolderJumper_2_Bridged JP2
 U 1 1 5C1B1B6A
 P 5250 2500
-F 0 "JP4" V 5250 2568 50  0000 L CNN
-F 1 "SolderJumper_2_Bridged" V 5295 2568 50  0001 L CNN
+F 0 "JP2" V 5250 2600 50  0000 L CNN
+F 1 "ISPPWR" V 5350 2600 50  0000 L CNN
 F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm" H 5250 2500 50  0001 C CNN
 F 3 "~" H 5250 2500 50  0001 C CNN
 	1    5250 2500
@@ -1723,10 +1722,10 @@ F 3 "" H 5250 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R16
+L Device:R R8
 U 1 1 5C1CBA70
 P 4200 2100
-F 0 "R16" V 3993 2100 50  0000 C CNN
+F 0 "R8" V 3993 2100 50  0000 C CNN
 F 1 "100" V 4084 2100 50  0000 C CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4130 2100 50  0001 C CNN
 F 3 "~" H 4200 2100 50  0001 C CNN
@@ -1739,10 +1738,10 @@ Connection ~ 3750 2900
 Wire Wire Line
 	3750 2900 3900 2900
 $Comp
-L Device:R R17
+L Device:R R9
 U 1 1 5C20B841
 P 4200 2300
-F 0 "R17" V 4300 2300 50  0000 C CNN
+F 0 "R9" V 4300 2300 50  0000 C CNN
 F 1 "100" V 4400 2300 50  0000 C CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4130 2300 50  0001 C CNN
 F 3 "~" H 4200 2300 50  0001 C CNN
@@ -1772,7 +1771,7 @@ Wire Wire Line
 Text Notes 3500 700  0    50   ~ 0
 Keep traces from cap sensors through R10-R15\nto uC short, direct, and away from LED modulation
 Text Notes 5800 1100 0    50   ~ 0
-Some programmers try to drive Vcc to 5V,\nbut most sense logic level on Vcc.\nCut JP3 and JP4 if needed.
+Some programmers try to drive Vcc to 5V,\nbut most sense logic level on Vcc.\nCut JP1 and JP2 if needed.
 Text Notes 7400 4600 0    50   ~ 0
 C10-C13 are overkill for\nfiltering but are also\ndecorative as electrolytics.
 Text Notes 3550 3900 0    50   ~ 0
@@ -1785,7 +1784,7 @@ Wire Wire Line
 Text Notes 3550 3300 0    50   ~ 0
 Ground TP10\nfor ext reset
 Text Notes 3950 1850 0    50   ~ 0
-Cut R16 and R17\nif ISP lines break\ncap sensing
+Cut R8 and R9\nif ISP lines break\ncap sensing
 $Comp
 L christmas-tree:Logo_Love_Always LOGO2
 U 1 1 5BD90B09
@@ -1799,4 +1798,16 @@ F 3 "~" H 8950 6250 50  0001 C CNN
 $EndComp
 Text Notes 8950 1800 0    50   ~ 0
 Choose C5 based on U3's datasheet
+$Comp
+L Connector:TestPoint TP5
+U 1 1 5BD7E368
+P 2950 800
+F 0 "TP5" V 3050 1050 50  0000 C CNN
+F 1 "OCHG" V 2950 1100 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 3150 800 50  0001 C CNN
+F 3 "~" H 3150 800 50  0001 C CNN
+	1    2950 800 
+	0    -1   -1   0   
+$EndComp
+Connection ~ 2950 800 
 $EndSCHEMATC
