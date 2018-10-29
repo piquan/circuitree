@@ -1,0 +1,1 @@
+The original product is the Christmas Tree, by Joel Ray Holveck.  The repository is at https://github.com/piquan/christmas-tree .  People manufacturing or modifying the product are invited (but not required) to contact the original creator using the contact information listed at https://github.com/piquan/ .
