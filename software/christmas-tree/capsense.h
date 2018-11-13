@@ -65,7 +65,6 @@ uint16_t CapacitiveSensor<charge_pin>::Sense() {
   } else {
     actual_ceiling = 0xffff;
   }
-  actual_ceiling = 0xffff;  
 
   uint16_t count = 0;
   for (uint8_t sample_i = 0; sample_i < sample_count; sample_i++) {

@@ -8,6 +8,13 @@
 void AssertFail(int lineno);
 #define assert(e) ((e) ? (void)0 : AssertFail(__LINE__))
 
+class CTDebugger : public Print {
+ public:
+  virtual size_t write(uint8_t);
+ private:
+  void Clock(bool val);
+} Debugger;
+
 #include "capsense.h"
 #include "tlc5947.h"
 
@@ -64,7 +71,7 @@ constexpr uint8_t kStackCanarySweepFreq = 64;
 constexpr uint8_t kCsSamps = 16;
 
 // When tuning kCsThres, make sure your hand isn't over the laptop!
-constexpr long kCsThres = (long)kCsSamps * 16;
+constexpr long kCsThres = (long)kCsSamps * 8;
 constexpr long kCsThrL = kCsThres / 2;
 constexpr long kCsThrH = kCsThres * 3 / 2;
 
@@ -155,20 +162,13 @@ unsigned long debug_led_latch_at_millis;
 constexpr unsigned long kDbgLedLatchDelayMs = 1000;
 
 uint16_t bright; // Calculated during startup
-float bright_pct = 1.0;
+float bright_pct = 0.5;
 
 void TwinkleBool(uint16_t ledno, bool val) {
   long delta = display_mode == kModeLove ? MyRandom(bright/128) : 0;
   // The "16 * delta" is because we totally ignore the gamma curve here.
   leds.setPWM(ledno, val ? bright - (16 * delta) : delta);
 }
-
-class CTDebugger : public Print {
- public:
-  virtual size_t write(uint8_t);
- private:
-  void Clock(bool val);
-} Debugger;
 
 void __attribute__((noinline)) CTDebugger::Clock(bool val) {
   digitalWrite(kPinDbgSclk, val);
@@ -358,6 +358,8 @@ bool CapOrnament::SenseEdge() {
 // failure mode.  (I haven't allocated all of these failure codes.)
 void __attribute__((always_inline)) 
 CapOrnament::PostOneWay(uint32_t code, bool val) {
+  pinMode(kPinCsChg, OUTPUT);
+  pinMode(sense_pin_, INPUT);
   digitalWrite(kPinCsChg, val);
   delay(1);
   if (digitalRead(sense_pin_) != val) {
@@ -388,8 +390,8 @@ uint16_t LedPctToPwm(float pct) {
 }
 
 void UpdateBrightnessFromPct() {
-  bright_pct = constrain(bright_pct, 1.0 / kPwmMax, 1.0);
-  bright = LedPctToPwm(1.0);
+  bright_pct = constrain(bright_pct, 0.0, 1.0);
+  bright = constrain(LedPctToPwm(1.0), 5, leds.kPwmMax);
   Debugger.write('B');
   Debugger.println(bright);
 }
@@ -681,7 +683,8 @@ void loop() {
 
   bool toggle_onoff = csOnOff.SenseEdge();
   if (toggle_onoff) {
-    static bool blank_state = !blank_state;
+    static bool blank_state = false;
+    blank_state = !blank_state;
     digitalWrite(kPinLedBlank, blank_state);
     Debugger.write(blank_state ? 'o' : 'O');
     Debugger.println(bright);
@@ -714,12 +717,12 @@ void loop() {
 #endif
 
   if (display_mode == kModeJoy) {
+#ifdef JOY_BURNS_HOT
     for (int i = 0; i < num_led_stars; i++) {
       int ledno = pgm_read_byte(led_stars + i);
       leds.setPWM(ledno, bright);
     }
-
-#if 0
+#endif
     for (int i = 0; i < num_led_stars; i++) {
       float pct = 1.0 - abs(display_state.joy.phase - i);
       int ledno = pgm_read_byte(led_stars + i);
@@ -741,7 +744,6 @@ void loop() {
     leds.setPWM(LED_PHASE1, display_state.joy.cycle & 1 ? bright : 0);
     leds.setPWM(LED_PHASE2, display_state.joy.cycle & 2 ? bright : 0);
     leds.setPWM(LED_PHASE3, display_state.joy.cycle & 4 ? bright : 0);
-#endif
 
   } else {  // JOY and PEACE modes are handled by mostly-common code.
 

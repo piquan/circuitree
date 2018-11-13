@@ -20,6 +20,7 @@ public:
   void write(void);
 private:
   uint16_t pwmbuffer[numdrivers * kNumLeds];
+  friend void DoSanity(int lineno);
 };
 
 template <uint16_t numdrivers, uint8_t clk, uint8_t dat, uint8_t lat>
