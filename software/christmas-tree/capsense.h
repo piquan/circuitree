@@ -51,7 +51,6 @@ template<uint8_t charge_pin>
 template<uint16_t ceiling, uint8_t sample_count>
 uint16_t CapacitiveSensor<charge_pin>::Sense() {
   // Set up the pins to the needed modes
-  pinMode(charge_pin, OUTPUT);
   digitalWrite(charge_pin, LOW);
   digitalWrite(sense_pin_, LOW);
 
@@ -91,7 +90,6 @@ uint16_t CapacitiveSensor<charge_pin>::Sense() {
     }
   }
   // Leave it low for the next run.
-  pinMode(charge_pin, INPUT);
   pinMode(sense_pin_, OUTPUT);
   digitalWrite(sense_pin_, LOW);
 
