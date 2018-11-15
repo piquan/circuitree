@@ -14,7 +14,7 @@ void AssertFail(int lineno);
 #define assert(e) ((e) ? (void)0 : AssertFail(__LINE__))
 #endif
 
-class CTDebugger : public Print {
+class CTDebugger final : public Print {
 #ifdef NDEBUG
  public:
   size_t write(uint8_t) { return 0; }
@@ -64,17 +64,16 @@ float MyRandomFloat(float max) {
 #if F_CPU <= 4000000
   return max;
 #else
-  return (max * static_cast<float>(random(LONG_MAX)) / 
+  return (max * static_cast<float>(random(LONG_MAX)) /
           static_cast<float>(LONG_MAX));
 #endif
 }
 
 constexpr uint16_t kNumGpios = 10;  // Is this in a #defined constant?
-constexpr uint16_t kPwmMax = 4095;  // FIXME Push to a class constant upstream
 
 constexpr float kBrightChangeRate = 1.0 / 32;
 
-//#define CANARY 1
+#define CANARY 1
 constexpr uint8_t kStackCanaryVal = 105;
 constexpr uint8_t kStackCanarySweepFreq = 64;
 
@@ -109,7 +108,7 @@ constexpr uint8_t kPinCsO5S = 4;
 constexpr uint8_t kPinCsO6S = 6;
 
 // We use the same pin for kPinDbgMosi as kPinLedMosi.
-// This is the MISO, not MOSI, line on the ICSP header.
+// This is the MISO (not MOSI) line on the ICSP header.
 constexpr uint8_t kPinDbgMosi = 5;
 constexpr uint8_t kPinDbgSclk = 4;
 
@@ -205,18 +204,18 @@ uint8_t LedStars::count_;
 
 #ifndef NDEBUG
 const uint8_t led_stars_dev_by_pos[] PROGMEM = {
-  7, 8, 9, 10, 11, 12, 14, 13, 23, 20, 21, 22 };
+  3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 13, 23, 20, 21, 22 };
 const uint8_t led_stars_dev_by_color[] PROGMEM = {
-  10, 14, 22,  // green
-  7, 11, 23,   // red
-  8, 12, 20,   // yellow
-  9, 13, 21    // blue
+  6, 10, 14, 22,  // green
+  3, 7, 11, 23,   // red
+  4, 8, 12, 20,   // yellow
+  5, 9, 13, 21    // blue
 };
 constexpr LedStars led_stars_dev PROGMEM = {
   .pgm_by_pos_ = led_stars_dev_by_pos,
   .pgm_by_color_ = led_stars_dev_by_color,
-  .pgm_color_counts_ = { 3, 3, 3, 3 },
-  .pgm_count_ = 12,
+  .pgm_color_counts_ = { 4, 4, 4, 4 },
+  .pgm_count_ = 16,
 };
 #endif
 const uint8_t led_stars_norm_by_pos[] PROGMEM = {
@@ -264,12 +263,18 @@ unsigned long debug_led_latch_at_millis;
 constexpr unsigned long kDbgLedLatchDelayMs = 1000;
 
 uint16_t bright; // Calculated during startup
-float bright_pct = 1.0;
+float bright_pct = 0.5;
 
-void TwinkleBool(uint16_t ledno, bool val) {
+void __attribute__((noinline)) TwinkleBool(uint16_t ledno, bool val) {
+  // The twinkling of boolean outputs in debug mode is cute, but it takes
+  // 90 bytes or so of code space.
+#ifdef DO_TWINKLE_BOOL
   long delta = display_mode == kModeLove ? MyRandom(bright/128) : 0;
   // The "16 * delta" is because we totally ignore the gamma curve here.
   leds.setPWM(ledno, val ? bright - (16 * delta) : delta);
+#else
+  leds.setPWM(ledno, val ? bright : 0);
+#endif
 }
 
 #ifndef NDEBUG
@@ -289,20 +294,20 @@ size_t CTDebugger::write(uint8_t byte) {
 }
 #endif
 
-#ifndef NDEBUG
 void DidFail(void) {
+  // Use this if you want to halt the board after failures (e.g., during
+  // overnight testing).
   //wdt_disable();
   //while(1);
 }
 
+#ifndef NDEBUG
 void AssertFail(int lineno) {
   Debugger.write('A');
   Debugger.println(lineno);
   DidFail();
 }
-#else  // !NDEBUG
-void DidFail(void) {}
-#endif // !NDEBUG
+#endif
 
 void PostFail(uint8_t code, uint8_t aux) {
   uint16_t combined_code = aux << 8 | code;
@@ -484,7 +489,7 @@ bool CapOrnament::SenseEdge() {
 // (I did review the constructor.)
 // Note that this will POST with code to code+3, depending on the
 // failure mode.  (I haven't allocated all of these failure codes.)
-void __attribute__((always_inline)) 
+void __attribute__((always_inline))
 CapOrnament::PostOneWay(uint32_t code, bool val) {
   pinMode(sense_pin_, INPUT);
   digitalWrite(kPinCsChg, val);
@@ -509,11 +514,11 @@ CapOrnament csLove('L', kPinCsO6S);
 uint16_t LedPctToPwm(float pct) {
   pct = constrain(pct, 0.0, 1.0);
 #ifdef LED_GAMMA
-  return kPwmMax * pow(pct * bright_pct, LED_GAMMA);
+  return leds.kPwmMax * pow(pct * bright_pct, LED_GAMMA);
 #else
   // Approximate
   pct *= bright_pct;
-  return kPwmMax * pct * pct * pct;
+  return leds.kPwmMax * pct * pct * pct;
 #endif
 }
 
@@ -675,7 +680,8 @@ void setup() {
     // 2.5V.)
 
     // High fuse bits incorrect; probably reburn bootloader.
-    // Also can use (untested):
+    // Also can use this, but I had problems with it on a
+    // factory-fresh ATtiny84A:
     //     avrdude -p t84 -c usbtiny -U hfuse:w:0xdd:m -u
     PostFail(6, fuse_high);
   }
@@ -758,7 +764,7 @@ void setup() {
 #endif  // NDEBUG
   digitalWrite(kPinLedBlank, LOW);
 
-#ifndef NDEBUG  
+#ifndef NDEBUG
   Debugger.write('Z');
 #ifdef LED_Q
   leds.setPWM(LED_Q, 0);
@@ -854,6 +860,11 @@ void loop() {
   bool gotLove = csLove.SenseEdge();
   bool gotJoy = csJoy.SenseEdge();
   bool gotPeace = csPeace.SenseEdge();
+
+  // We always reset the display, even if we're in the right mode, to
+  // give visual feedback to the user.  Otherwise, the user might
+  // start fiddling with buttons by pressing the current mode and
+  // think that the button does nothing.
   if (gotLove) {
     display_mode = kModeLove;
     memset(&display_state.peace_love, 0, sizeof(display_state.peace_love));
@@ -1036,7 +1047,7 @@ void loop() {
       }
     }
   }  // kModePeace and kModeLove
-  
+
 #ifndef NDEBUG
   if (dev_mode) {
 #ifdef LED_Q
