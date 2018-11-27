@@ -14,15 +14,75 @@ void AssertFail(int lineno);
 #define assert(e) ((e) ? (void)0 : AssertFail(__LINE__))
 #endif
 
-class CTDebugger final : public Print {
+// I could make this inherit from Print to get printf, etc.  But the
+// decimal print routines take up too much flash space (about 300
+// bytes), so I print in hex, which is much cheaper.
+class CTDebugger final {
 #ifdef NDEBUG
  public:
-  size_t write(uint8_t) { return 0; }
-  void print(float) {}
-  void println(float) {}
+  void write(uint8_t) {}
+  template<typename T> void print(T) {}
+  template<typename T> void println(T) {}
 #else
+ private:
+  const char hexdigs[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+  void PrintByte(uint8_t val) {
+    write(hexdigs[val >> 4]);
+    write(hexdigs[val & 0x0f]);
+  }
  public:
-  virtual size_t write(uint8_t);
+  void write(uint8_t);
+  void print(uint8_t val) {
+    PrintByte(val);
+  }
+  void print(uint16_t val) {
+    PrintByte(val >> 8);
+    PrintByte(val);
+  }
+  void print(uint32_t val) {
+    PrintByte(val >> 24);
+    PrintByte(val >> 16);
+    PrintByte(val >> 8);
+    PrintByte(val);
+  }
+  void print(const char* val) {
+    while (*val) {
+      write(*(val++));
+    }
+  }
+  void print(int8_t val) {
+    if (val < 0) {
+      write('-');
+      print(static_cast<uint8_t>(-val));
+    } else {
+      print(static_cast<uint8_t>(val));
+    }
+  }
+  void print(int16_t val) {
+    if (val < 0) {
+      write('-');
+      print(static_cast<uint16_t>(-val));
+    } else {
+      print(static_cast<uint16_t>(val));
+    }
+  }
+  void print(int32_t val) {
+    if (val < 0) {
+      write('-');
+      print(static_cast<uint32_t>(-val));
+    } else {
+      print(static_cast<uint32_t>(val));
+    }
+  }
+  void println() {
+    write('\r');
+    write('\n');
+  }
+  template<typename T> void println(T val) {
+    print(val);
+    println();
+  }
  private:
   void Clock(bool val);
 #endif
@@ -40,48 +100,21 @@ class CTDebugger final : public Print {
 #include "capsense.h"
 #include "tlc5947.h"
 
-// With a 1 MHz clock, random() can take a long time (relatively
-// speaking), so we disable it then (and for anything under 4MHz).
-// Note: random() is always type "long", so MyRandom behaves similarly.
-inline long MyRandom(long max) {
-#if F_CPU <= 4000000
-  return max;
-#else
-  return random(max);
-#endif
-}
-inline long MyRandom(long min, long max) {
-#if F_CPU <= 4000000
-  return max;
-#else
-  return random(min, max);
-#endif
-}
-
-// The Arduino doesn't have a built-in random float function, so
-// we use this instead.
-float MyRandomFloat(float max) {
-#if F_CPU <= 4000000
-  return max;
-#else
-  return (max * static_cast<float>(random(LONG_MAX)) /
-          static_cast<float>(LONG_MAX));
-#endif
+// The Arduino doesn't have a built-in random float function, so I
+// have this instead.  It ain't perfect by a long shot, but it works
+// for my needs.
+float RandomFloat(float max) {
+  return (max * static_cast<float>(random()) / static_cast<float>(LONG_MAX));
 }
 
 constexpr uint16_t kNumGpios = 10;  // Is this in a #defined constant?
 
 constexpr float kBrightChangeRate = 1.0 / 32;
 
+// Note that CANARY takes about 132 bytes.
 #define CANARY 1
 constexpr uint8_t kStackCanaryVal = 105;
 constexpr uint8_t kStackCanarySweepFreq = 64;
-
-// I use the gamma correction of 2.8, based on the quick tests at
-// https://learn.adafruit.com/led-tricks-gamma-correction
-// Enabling LED_GAMMA takes about 1k of flash space to get the
-// floating point library; since we only have 8k, it ain't worth it!
-//#define LED_GAMMA 2.8
 
 // Regarding kCsSamps: Larger is more stable but slower.  The speed
 // also depends on the capacitance present; lower capacitance resolves
@@ -92,9 +125,9 @@ constexpr uint8_t kStackCanarySweepFreq = 64;
 constexpr uint8_t kCsSamps = 16;
 
 // When tuning kCsThres, make sure your hand isn't over the laptop!
-constexpr long kCsThres = (long)kCsSamps * 8;
-constexpr long kCsThrL = kCsThres / 2;
-constexpr long kCsThrH = kCsThres * 3 / 2;
+constexpr unsigned int kCsThres = kCsSamps * 6;
+constexpr unsigned int kCsThrL = kCsThres / 2;
+constexpr unsigned int kCsThrH = kCsThres * 3 / 2;
 
 // For mappings between package pin numbers and GPIO pin numbers,
 // see http://highlowtech.org/?p=1695 specifically
@@ -239,17 +272,20 @@ const LedStars* led_stars;
 #else
 constexpr const LedStars* led_stars = &led_stars_norm;
 #endif
-constexpr int kNumLedStarsMax = 21;
+constexpr int kNumLedStarsMax = led_stars_norm.pgm_count_;
 
 #ifndef NDEBUG
 bool dev_mode;
 #endif
-enum DisplayMode { kModeLove, kModePeace, kModeJoy } display_mode = kModePeace;
+enum DisplayMode { kModeLove, kModePeace, kModeJoy } display_mode = kModeLove;
+bool joy_sub_mode;
 
+// FIXME Why are these separate from the top-level variables?
 struct __attribute__ ((__packed__)) {
   bool uninitialized;  // Erased EEPROM reads as all 1s
   float bright_pct;
   DisplayMode display_mode;
+  bool joy_sub_mode;
 } persistent_data;
 unsigned long update_persistent_data_at_millis = ULONG_MAX;
 
@@ -269,7 +305,7 @@ void __attribute__((noinline)) TwinkleBool(uint16_t ledno, bool val) {
   // The twinkling of boolean outputs in debug mode is cute, but it takes
   // 90 bytes or so of code space.
 #ifdef DO_TWINKLE_BOOL
-  long delta = display_mode == kModeLove ? MyRandom(bright/128) : 0;
+  long delta = display_mode == kModeLove ? random(bright/128) : 0;
   // The "16 * delta" is because we totally ignore the gamma curve here.
   leds.setPWM(ledno, val ? bright - (16 * delta) : delta);
 #else
@@ -282,7 +318,7 @@ void __attribute__((noinline)) CTDebugger::Clock(bool val) {
   digitalWrite(kPinDbgSclk, val);
   delayMicroseconds(kDbgClkHoldMicros);
 }
-size_t CTDebugger::write(uint8_t byte) {
+void CTDebugger::write(uint8_t byte) {
   pinMode(kPinDbgSclk, OUTPUT);
   for (int i = 0; i < 8; i++) {
     digitalWrite(kPinDbgMosi, byte & 0x80);
@@ -290,7 +326,6 @@ size_t CTDebugger::write(uint8_t byte) {
     Clock(true);
     Clock(false);
   }
-  return 1;
 }
 #endif
 
@@ -310,9 +345,10 @@ void AssertFail(int lineno) {
 #endif
 
 void PostFail(uint8_t code, uint8_t aux) {
-  uint16_t combined_code = aux << 8 | code;
-  for (uint16_t i = 0; i < 16; i++) {
-    leds.setPWM(i + 4, (combined_code & ((uint16_t)1 << i)) ? bright : 0);
+  uint16_t combined_code = (aux << 8) | code;
+  for (uint16_t i = 4; i < 20; i++) {
+    leds.setPWM(i, combined_code & 1 ? leds.kPwmMax : 0);
+    combined_code >>= 1;
   }
   digitalWrite(kPinLedBlank, LOW);
 
@@ -322,7 +358,7 @@ void PostFail(uint8_t code, uint8_t aux) {
   Debugger.print(code);
   Debugger.write(':');
   Debugger.println(aux);
-  for (int i = 0; i < kPostFailBlinks; i++) {
+  for (uint8_t i = 0; i < kPostFailBlinks; i++) {
     leds.setPWM(1, 0);  // Red LED
     leds.write();
     delay(1000);
@@ -343,7 +379,7 @@ class CapOrnament {
   bool led_diagnostic() const { return state_.led_diagnostic; }
   bool offline() const { return state_.offline; }
   void set_offline(bool offline) { state_.offline = offline; }
-  void Post(uint32_t code);
+  void Post(uint8_t code);
   bool SenseEdge();
   bool SenseLevel() { SenseEdge(); return level(); }
   static uint8_t count(void) { return count_; }
@@ -360,13 +396,13 @@ class CapOrnament {
 #endif
   static uint8_t count_;
 
-  void PostOneWay(uint32_t code, bool value);
+  void PostOneWay(uint8_t code, bool value);
 #ifndef NDEBUG
   bool Dbg() { return dbg_sensor_ == (sense_pin_ << kDbgSensorPinShift); }
 #endif
 
-  template<int threshold_l, int threshold_h>
-  bool Schmitt(int input);
+  template<unsigned int threshold_l, unsigned int threshold_h>
+  bool Schmitt(unsigned int input);
   bool CheckRisingEdge(bool input);
 
   CapacitiveSensor<kPinCsChg> cs_;
@@ -384,8 +420,8 @@ uint8_t CapOrnament::dbg_sensor_ = 0;
 #endif
 uint8_t CapOrnament::count_ = 0;
 
-template<int threshold_l, int threshold_h>
-bool CapOrnament::Schmitt(int input) {
+template<unsigned int threshold_l, unsigned int threshold_h>
+bool CapOrnament::Schmitt(unsigned int input) {
   if (state_.level) {
     return input > threshold_l;
   } else if (input >= threshold_h) {
@@ -406,18 +442,12 @@ void CapOrnament::SweepDbgSensor() {
 
 bool CapOrnament::SenseEdge() {
   if (state_.offline) {
-#ifndef NDEBUG
-    if (Dbg()) {
-      Debugger.write(name_);
-      Debugger.println('P');
-    }
-#endif
     return false;
   }
 
   // I tell the Sense routine that it doesn't need to bother after measuring
   // kLedMeterMax, which I assume is going to be greater than kCsThrH.
-  long csval = cs_.Sense<kLedMeterMax, kCsSamps>();
+  uint16_t csval = cs_.Sense<kLedMeterMax, kCsSamps>();
   // Add a slight delay if we're using the debugging CLK line, to make
   // sure we didn't just clock in trash.  This will timeout the
   // debugging board's SPI reader.
@@ -435,11 +465,12 @@ bool CapOrnament::SenseEdge() {
     Debugger.write('\x0c');
     debug_led_latch_at_millis = millis() + kDbgLedLatchDelayMs;
   }
-  if (rising_edge) {
-    count_++;
-    Debugger.write('#');
-    Debugger.println(count_);
-  }
+  // Removed for space
+  //if (rising_edge) {
+  //  count_++;
+  //  Debugger.write('#');
+  //  Debugger.println(count_);
+  //}
   if (Dbg() || any_edge) {
     Debugger.write(name_);
     Debugger.write('F');
@@ -448,12 +479,11 @@ bool CapOrnament::SenseEdge() {
     Debugger.print(csval);
     Debugger.write(new_level ? '*' : '_');
     Debugger.write(rising_edge ? '*' : '_');
-    Debugger.print("\r\n");
+    Debugger.println();
   }
 #endif
 
-#ifndef NDEBUG
-#if defined(LED_CAP) || defined(LED_METER_START) || defined(LED_SCHMITT)
+#if !defined(NDEBUG) && (defined(LED_CAP) || defined(LED_METER_START) || defined(LED_SCHMITT))
   if (state_.led_diagnostic) {
 #ifdef LED_CAP
     long brightval = constrain(map(csval, 0, kLedMeterMax, 0, bright),
@@ -464,7 +494,8 @@ bool CapOrnament::SenseEdge() {
     TwinkleBool(LED_SCHMITT, triggered);
 #endif
 #ifdef LED_METER_START
-    float meter_value = (float)csval * ((float)kLedMeterCount / kLedMeterMax);
+    float meter_value =
+        static_cast<float>(csval) * kLedMeterCount / kLedMeterMax;
     for (uint16_t ledno = 0; ledno < kLedMeterCount; ledno++) {
       if (meter_value < ledno) {
         TwinkleBool(LED_METER_START + ledno, false);
@@ -478,8 +509,7 @@ bool CapOrnament::SenseEdge() {
 #endif
     leds.write();
   }
-#endif  // defined(LED_CAP) || defined(LED_METER_START) || defined(LED_SCHMITT)
-#endif  // NDEBUG
+#endif  // !NDEBUG && (LED_CAP || LED_METER_START || LED_SCHMITT)
 
   return rising_edge;
 }
@@ -490,7 +520,7 @@ bool CapOrnament::SenseEdge() {
 // Note that this will POST with code to code+3, depending on the
 // failure mode.  (I haven't allocated all of these failure codes.)
 void __attribute__((always_inline))
-CapOrnament::PostOneWay(uint32_t code, bool val) {
+CapOrnament::PostOneWay(uint8_t code, bool val) {
   pinMode(sense_pin_, INPUT);
   digitalWrite(kPinCsChg, val);
   delay(1);
@@ -499,7 +529,7 @@ CapOrnament::PostOneWay(uint32_t code, bool val) {
     set_offline(true);
   }
 }
-void CapOrnament::Post(uint32_t code) {
+void CapOrnament::Post(uint8_t code) {
   PostOneWay(code, HIGH);
   PostOneWay(code + 1, LOW);
 }
@@ -513,20 +543,20 @@ CapOrnament csLove('L', kPinCsO6S);
 
 uint16_t LedPctToPwm(float pct) {
   pct = constrain(pct, 0.0, 1.0);
-#ifdef LED_GAMMA
-  return leds.kPwmMax * pow(pct * bright_pct, LED_GAMMA);
-#else
-  // Approximate
+  // I use a gamma of 3, since I don't need this to be terribly good,
+  // and a gamma of 3 can be implemented without needing pow() (which
+  // takes a lot of space).
   pct *= bright_pct;
   return leds.kPwmMax * pct * pct * pct;
-#endif
 }
 
 void UpdateBrightnessFromPct() {
-  // We keep bright_pct over 0.1 to prevent this from having an
-  // apparent malfunction (that would persist once it writes to EEPROM)
-  // if somebody holds it by the "BRIGHT-" button.
-  bright_pct = constrain(bright_pct, 0.1, 1.0);
+  // We keep bright_pct over 0 to prevent this from having an apparent
+  // malfunction (that would persist once it writes to EEPROM) if
+  // somebody holds it by the "BRIGHT-" button.  0.15 is about the
+  // minumum to ensure that the RGB LED is always on regardless of
+  // mode.
+  bright_pct = constrain(bright_pct, 0.15, 1.0);
   bright = LedPctToPwm(1.0);
   Debugger.write('B');
   Debugger.println(bright);
@@ -554,7 +584,8 @@ void LedSlowBurn() {
   // often sees them as all on during startup, and when it
   // immediately turns them on, it messes with our voltage and
   // causes a BOR.
-  LedAll(0);
+
+  // We don't clear them intially, since our caller does that.
   digitalWrite(kPinLedBlank, LOW);
   // Turn them on slowly.
   for (uint16_t i = 0; i < 24; i++) {
@@ -632,6 +663,7 @@ void setup() {
     Debugger.println('+');
     bright_pct = persistent_data.bright_pct;
     display_mode = persistent_data.display_mode;
+    joy_sub_mode = persistent_data.joy_sub_mode;
   }
   UpdateBrightnessFromPct();
 
@@ -741,8 +773,11 @@ void setup() {
 
   // Only do the visible or slow tests in dev mode; otherwise, just
   // initialize to a blank display.
-  LedAll(0);
-#ifndef NDEBUG
+  leds.clear();
+#ifdef TEST_LEDS
+  // This is disabled by default, since kJoyMode handles the necessary
+  // testing ok.  This is mostly useful for testing how the power
+  // supply can manage sudden demand changes.
   if (dev_mode) {
     // Test LEDs
     // In particular, I want to see if there's a voltage drop at Vcc
@@ -761,11 +796,10 @@ void setup() {
     digitalWrite(kPinLedBlank, HIGH);
     delay(100);
   }
-#endif  // NDEBUG
+#endif  // TEST_LED_INRUSH
   digitalWrite(kPinLedBlank, LOW);
 
 #ifndef NDEBUG
-  Debugger.write('Z');
 #ifdef LED_Q
   leds.setPWM(LED_Q, 0);
 #endif
@@ -790,7 +824,7 @@ void setup() {
   wdt_enable(WDTO_8S);
 
 #ifndef NDEBUG
-  Debugger.print(" OK\r\nT");
+  Debugger.write('T');
   Debugger.println(kCsThres);
 #endif
 }
@@ -800,6 +834,7 @@ static union {
     float phase;
     int8_t direction;
     uint8_t cycle;
+    uint8_t cycle_minor;
   } joy;
   struct {
     float phase;  // Range is [0,3)
@@ -821,7 +856,7 @@ void DoSanity(int lineno __attribute__((unused))) {
 
 void __attribute__((noinline)) SetLoveRGBPin(uint8_t pin, float phase) {
   leds.setPWM(pin, LedPctToPwm(
-      phase * 0.5 * kLoveStarMaxRamp * kLoveStarMaxRamp));
+      phase * kLoveStarMaxRamp * kLoveStarMaxRamp));
 }
 
 void loop() {
@@ -867,21 +902,18 @@ void loop() {
   // think that the button does nothing.
   if (gotLove) {
     display_mode = kModeLove;
-    memset(&display_state.peace_love, 0, sizeof(display_state.peace_love));
   } else if (gotPeace) {
     display_mode = kModePeace;
-    memset(&display_state.peace_love, 0, sizeof(display_state.peace_love));
   } else if (gotJoy) {
+    if (display_mode == kModeJoy) 
+      joy_sub_mode = !joy_sub_mode;
     display_mode = kModeJoy;
-    display_state.joy = {
-      .phase = 0,
-      .direction = 1,
-      .cycle = 1,
-    };
   }
 
   if (gotLove || gotPeace || gotJoy) {
+    memset(&display_state, 0, sizeof(display_state));
     persistent_data.display_mode = display_mode;
+    persistent_data.joy_sub_mode = joy_sub_mode;
     update_persistent_data_at_millis = millis() + 2000;
   }
 
@@ -892,42 +924,69 @@ void loop() {
 
   if (display_mode == kModeJoy) {
     auto by_pos = led_stars->by_pos();
-#if defined(JOY_BURNS_HOT)
-    for (int i = 0; i < led_stars->Count(); i++) {
-      uint8_t ledno = by_pos[i];
-      leds.setPWM(ledno, bright);
-    }
-#elif defined(JOY_SHOWS_SCALE)
-    for (int i = 0; i < led_stars->Count(); i++) {
-      uint8_t ledno = by_pos[i];
-      float pct = static_cast<float>(i) / led_stars->Count();
-      leds.setPWM(ledno, LedPctToPwm(pct));
-    }
-#else
-    for (int i = 0; i < led_stars->Count(); i++) {
-      float pct = 1.0 - abs(display_state.joy.phase - i);
-      int ledno = by_pos[i];
-      leds.setPWM(ledno, LedPctToPwm(pct));
-    }
-    display_state.joy.phase += 0.6 * display_state.joy.direction;
+    if (joy_sub_mode) {
+      for (uint16_t i = 0; i < led_stars->Count(); i++) {
+        uint8_t i_8bit = i * 256 / led_stars->Count();
+        // Compute the absolute value of i_8bit - cycle
+        uint8_t mag_major = i_8bit - display_state.joy.cycle;
+        if (mag_major & 0x80)
+            mag_major = -mag_major;
+        uint8_t mag_minor = i_8bit - display_state.joy.cycle_minor;
+        if (mag_minor & 0x80)
+            mag_minor = -mag_minor;
+        // mag_major and mag_minor now hold 7 bits of data each.  It's
+        // a little tricky to do gamma correction in integer space
+        // without losing too much precision.  Unfortunately, 32-bit
+        // arithmetic is quite expensive on an AVR, and 16-bit only
+        // slightly less so.  Our inputs are only 8 bits, so we're ok
+        // with some loss of magnitude precision during this stage,
+        // as long as we don't lose it all up-front.
+        uint8_t bright_8bit = bright / 16;
+        uint16_t mag_14bit = mag_major * mag_minor;  // 0-16129
+        uint16_t mag_gamma = mag_14bit;              // 0-252
+        mag_gamma *= bright_8bit;                    // 0-64260
+        mag_gamma /= 256;                            // 0-251
+        mag_gamma *= bright_8bit;                    // 0-64005
+        uint16_t pwm = mag_gamma / 16;               // 0-4000
+        uint8_t ledno = by_pos[i];
+        leds.setPWM(ledno, pwm);
+      }
+      // Not happy with this effect; find something better.
+      leds.setPWM(
+          LED_PHASE1,
+          (512 - display_state.joy.cycle - display_state.joy.cycle_minor));
+      leds.setPWM(LED_PHASE2, display_state.joy.cycle);
+      leds.setPWM(LED_PHASE3, display_state.joy.cycle_minor);
+      leds.setPWM(LED_PHASE1, 0);
+      leds.setPWM(LED_PHASE2, 0);
+      leds.setPWM(LED_PHASE3, 0);
 
-    if (display_state.joy.direction == 1 &&
-        display_state.joy.phase >= led_stars->Count() - 1) {
-      display_state.joy.direction = -1;
-      display_state.joy.phase = led_stars->Count() - 1;
-      display_state.joy.cycle++;
-    } else if (display_state.joy.direction == -1 &&
-               display_state.joy.phase <= 0) {
-      display_state.joy.direction = 1;
-      display_state.joy.phase = 0;
-      display_state.joy.cycle++;
+      display_state.joy.cycle += 1;
+      display_state.joy.cycle_minor -= 2;
+    } else {
+      for (int i = 0; i < led_stars->Count(); i++) {
+        float pct = 1.0 - abs(display_state.joy.phase - i);
+        int ledno = by_pos[i];
+        leds.setPWM(ledno, LedPctToPwm(pct));
+      }
+      display_state.joy.phase += (display_state.joy.direction ? 0.6 : -0.6);
+      if (display_state.joy.direction == 1 &&
+          display_state.joy.phase >= led_stars->Count() - 1) {
+        display_state.joy.direction = 0;
+        display_state.joy.phase = led_stars->Count() - 1;
+        display_state.joy.cycle++;
+      } else if (display_state.joy.direction == 0 &&
+                 display_state.joy.phase <= 0) {
+        display_state.joy.direction = 1;
+        display_state.joy.phase = 0;
+        display_state.joy.cycle++;
+      }
+      if (display_state.joy.cycle == 8)  // Blackout is unappealing; skip it.
+        display_state.joy.cycle = 1;
+      leds.setPWM(LED_PHASE1, display_state.joy.cycle & 1 ? bright >> 2 : 0);
+      leds.setPWM(LED_PHASE2, display_state.joy.cycle & 2 ? bright >> 2 : 0);
+      leds.setPWM(LED_PHASE3, display_state.joy.cycle & 4 ? bright >> 2 : 0);
     }
-    if (display_state.joy.cycle == 8)  // Blackout is unappealing; skip it.
-      display_state.joy.cycle = 1;
-    leds.setPWM(LED_PHASE1, display_state.joy.cycle & 1 ? bright : 0);
-    leds.setPWM(LED_PHASE2, display_state.joy.cycle & 2 ? bright : 0);
-    leds.setPWM(LED_PHASE3, display_state.joy.cycle & 4 ? bright : 0);
-#endif
 
   } else {  // PEACE and LOVE modes are handled by mostly-common code.
 
@@ -953,17 +1012,17 @@ void loop() {
       phase_g = display_state.peace_love.phase - 2.0;
       phase_b = 3.0 - display_state.peace_love.phase;
     }
-    if (display_mode == kModePeace) {
-      leds.setPWM(LED_PHASE1, LedPctToPwm(phase_r * 0.6));
-      leds.setPWM(LED_PHASE2, LedPctToPwm(phase_g * 0.6));
-      leds.setPWM(LED_PHASE3, LedPctToPwm(phase_b * 0.6));
-      display_state.peace_love.phase += kPhaseIncrPeace;
-    } else {
-      SetLoveRGBPin(LED_PHASE1, phase_r);
-      SetLoveRGBPin(LED_PHASE2, phase_g);
-      SetLoveRGBPin(LED_PHASE3, phase_b);
-      display_state.peace_love.phase += kPhaseIncrLove;
-    }
+    display_state.peace_love.phase +=
+        display_mode == kModePeace ? kPhaseIncrPeace : kPhaseIncrLove;
+    // The color wheel looks better if we don't do the gamma
+    // correction here.  However, we do back off by a constant factor,
+    // since the RGB LED is otherwise too bright for comfort.  The
+    // constant is different depending on the mode, since the ramp on
+    // Peace mode is twice as high as the ramp on Love mode.
+    float rgb_backoff = display_mode == kModePeace ? 0.4 : 0.2;
+    leds.setPWM(LED_PHASE1, phase_r * rgb_backoff * bright);
+    leds.setPWM(LED_PHASE2, phase_g * rgb_backoff * bright);
+    leds.setPWM(LED_PHASE3, phase_b * rgb_backoff * bright);
     if (display_state.peace_love.phase >= 3.0)
       display_state.peace_love.phase -= 3.0;
 
@@ -973,7 +1032,7 @@ void loop() {
     constexpr long kLedStarBurstPeriod = 128;
 
     for (int i = 0; i < led_stars->Count(); i++) {
-      bool swap_direction = MyRandom(kLedStarPeriod) == 0;
+      bool swap_direction = random(kLedStarPeriod) == 0;
       if ((display_state.peace_love.star_ramping_up[i/8] & (1<<(i%8)))) {
         display_state.peace_love.star_brightness[i] +=
             display_state.peace_love.star_motion[i];
@@ -991,7 +1050,7 @@ void loop() {
       }
       if (swap_direction) {
         display_state.peace_love.star_motion[i] =
-            MyRandomFloat(kLedStarDeltaMotion) + kLedStarMinMotion;
+            RandomFloat(kLedStarDeltaMotion) + kLedStarMinMotion;
         display_state.peace_love.star_ramping_up[i/8] ^= 1 << (i%8);
       }
     }
@@ -1028,16 +1087,16 @@ void loop() {
       }
     } else {  // kModeLove
       for (int i = 0; i < led_stars->Count(); i++) {
-        bool burst = MyRandom(kLedStarBurstPeriod) == 0;
+        bool burst = random(kLedStarBurstPeriod) == 0;
         uint16_t half_bright = bright >> 1;
         uint16_t pwm;
         if (burst) {
-          pwm = MyRandom(half_bright, bright);
+          pwm = random(half_bright, bright);
         } else {
           uint16_t nominal = LedPctToPwm(
               kLoveStarMaxRamp * display_state.peace_love.star_brightness[i]);
           uint16_t half_nominal = nominal >> 1;
-          pwm = MyRandom(half_nominal) + half_nominal;
+          pwm = random(half_nominal) + half_nominal;
           if (nominal < half_bright) {
             pwm += half_nominal;
           }
