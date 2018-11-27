@@ -1,12 +1,13 @@
 EESchema Schematic File Version 4
+LIBS:christmas-tree-cache
 EELAYER 26 0
 EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "Christmas Tree"
-Date ""
-Rev "3"
+Date "2018-11-25"
+Rev "4"
 Comp "Joel Ray Holveck"
 Comment1 ""
 Comment2 ""
