@@ -442,6 +442,12 @@ void CapOrnament::SweepDbgSensor() {
 
 bool CapOrnament::SenseEdge() {
   if (state_.offline) {
+#ifndef NDEBUG
+    if (Dbg()) {
+      Debugger.write(name_);
+      Debugger.println('P');
+    }
+#endif
     return false;
   }
 
@@ -465,12 +471,11 @@ bool CapOrnament::SenseEdge() {
     Debugger.write('\x0c');
     debug_led_latch_at_millis = millis() + kDbgLedLatchDelayMs;
   }
-  // Removed for space
-  //if (rising_edge) {
-  //  count_++;
-  //  Debugger.write('#');
-  //  Debugger.println(count_);
-  //}
+  if (rising_edge) {
+    count_++;
+    Debugger.write('#');
+    Debugger.println(count_);
+  }
   if (Dbg() || any_edge) {
     Debugger.write(name_);
     Debugger.write('F');
