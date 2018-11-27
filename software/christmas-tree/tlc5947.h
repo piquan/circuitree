@@ -15,9 +15,11 @@ public:
   static constexpr uint16_t kPwmMax = 4095;
   static constexpr uint16_t kNumLeds = 24;
   void begin(void);
-  void setPWM(uint16_t chan, uint16_t pwm);
+  uint16_t& operator[](size_t chan) { return pwmbuffer[chan]; }
+  void setPWM(uint16_t chan, uint16_t pwm) { (*this)[chan] = pwm; }
   void setLED(uint16_t lednum, uint16_t r, uint16_t g, uint16_t b);
   void write(void);
+  void clear(void);
 private:
   uint16_t pwmbuffer[numdrivers * kNumLeds];
   friend void DoSanity(int lineno);
@@ -41,11 +43,6 @@ void TLC5947<numdrivers, clk, dat, lat>::write(void) {
 }
 
 template <uint16_t numdrivers, uint8_t clk, uint8_t dat, uint8_t lat>
-void TLC5947<numdrivers, clk, dat, lat>::setPWM(uint16_t chan, uint16_t pwm) {
-  pwmbuffer[chan] = pwm;
-}
-
-template <uint16_t numdrivers, uint8_t clk, uint8_t dat, uint8_t lat>
 void TLC5947<numdrivers, clk, dat, lat>::setLED(
     uint16_t lednum, uint16_t r, uint16_t g, uint16_t b) {
   setPWM(lednum*3, r);
@@ -59,6 +56,11 @@ void TLC5947<numdrivers, clk, dat, lat>::begin() {
   pinMode(clk, OUTPUT);
   pinMode(dat, OUTPUT);
   pinMode(lat, OUTPUT);
+}
+
+template <uint16_t numdrivers, uint8_t clk, uint8_t dat, uint8_t lat>
+void TLC5947<numdrivers, clk, dat, lat>::clear() {
+  memset(pwmbuffer, 0, numdrivers * kNumLeds * sizeof(*pwmbuffer));
 }
 
 #endif
