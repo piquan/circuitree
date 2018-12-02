@@ -75,6 +75,8 @@ class CTDebugger final {
       print(static_cast<uint32_t>(val));
     }
   }
+  void print(float val);
+  void print(double val) { print(static_cast<float>(val)); }
   void println() {
     write('\r');
     write('\n');
@@ -326,6 +328,55 @@ void CTDebugger::write(uint8_t byte) {
     Clock(true);
     Clock(false);
   }
+}
+
+// Takes about 186 bytes (if it's actually called)
+void
+CTDebugger::print(float value_in) {
+  union {
+    // Essentially defines the IEEE 784-2008 binary16 layout
+    struct {
+      unsigned int significand: 10;
+      unsigned int exponent: 5;
+      unsigned int sign: 1;
+    } bits;
+    float flo;
+  } value;
+  value.flo = value_in;
+
+  // Print the sign even if it's a NaN.  This saves some code space,
+  // and also distinguishes between quiet (negative) and signaling
+  // (positive) NaNs.
+  if (value.bits.sign) {
+    write('-');
+  }
+  
+  // Check NaN and infinity
+  if (value.bits.exponent == 0x1f) {
+    if (value.bits.significand != 0) {
+      print("nan");
+    } else {
+      print("inf");
+    }
+    return;
+  }
+  
+  if (value.bits.exponent == 0) {
+    write('0');
+  } else {
+    write('1');
+  }
+  write('.');
+
+  print(value.bits.significand >> 2);
+  print(value.bits.significand << 6);
+  
+  // We use 'x' to separate the significand from the exponent.  The
+  // C++ %a modifier uses 'p', but it prints the exponent in decimal,
+  // so we avoid that.
+  write('x');
+  int8_t norm_exponent = value.bits.exponent - 15;
+  print(norm_exponent);
 }
 #endif
 
