@@ -1,4 +1,8 @@
-bxr=1;              // Box rounding
+// You can set a name to have a personalized name plaque.  You can also
+// set this on the command line with '-Dname="foo"', which will override
+// this value.
+name="";
+bxr=1;                          // Box rounding
 
 module gift(dx, dy, dz, x, y, z, tx, ty, tz, ribbonside=3) {
      // Prevent voids under boxes by extending them to the table.
@@ -195,8 +199,12 @@ module plaque() {
           translate([plx, -40, 10]) sphere(r=bxr);
      }
      translate([0, -35, 10]) rotate([15, 0, 0])
-          linear_extrude(height=3) translate([0, -.5])
-          text("Somebody", size=15, halign="center");
+          linear_extrude(height=3)
+          // The position of the name is 1mm different if there are
+          // descender letters.  Unfortunately, failed searches
+          // generate a warning.
+          translate([0, search("gjpqy", name) ? -.5 : -1.5])
+          text(name, size=15, halign="center");
 }
 module plaque_keepout() {
      translate([-plx, -40, 0]) cube([2*plx, 20, 30], center=false);
@@ -209,9 +217,9 @@ module main() {
          #smallest();
          difference() {
               gifts();
-              plaque_keepout();
+              if (name) plaque_keepout();
          }
-         plaque();
+         if (name) plaque();
     }
     // Negative elements
     keepout();
