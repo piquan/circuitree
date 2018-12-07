@@ -280,14 +280,15 @@ constexpr int kNumLedStarsMax = led_stars_norm.pgm_count_;
 bool dev_mode;
 #endif
 enum DisplayMode { kModeLove, kModePeace, kModeJoy } display_mode = kModeLove;
-bool joy_sub_mode;
+enum JoySubMode { kSubModeCylon, kSubModeDoubleChase, kSubModeLast };
+JoySubMode joy_sub_mode = kSubModeCylon;
 
 // FIXME Why are these separate from the top-level variables?
 struct __attribute__ ((__packed__)) {
   bool uninitialized;  // Erased EEPROM reads as all 1s
   float bright_pct;
   DisplayMode display_mode;
-  bool joy_sub_mode;
+  JoySubMode joy_sub_mode;
 } persistent_data;
 unsigned long update_persistent_data_at_millis = ULONG_MAX;
 
@@ -961,8 +962,13 @@ void loop() {
   } else if (gotPeace) {
     display_mode = kModePeace;
   } else if (gotJoy) {
-    if (display_mode == kModeJoy) 
-      joy_sub_mode = !joy_sub_mode;
+    if (display_mode == kModeJoy) {
+      joy_sub_mode = 
+          static_cast<JoySubMode>(static_cast<int>(joy_sub_mode) + 1);
+      if (joy_sub_mode == kSubModeLast) {
+        joy_sub_mode = static_cast<JoySubMode>(0);
+      }
+    }
     display_mode = kModeJoy;
   }
 
@@ -980,68 +986,81 @@ void loop() {
 
   if (display_mode == kModeJoy) {
     auto by_pos = led_stars->by_pos();
-    if (joy_sub_mode) {
-      for (uint16_t i = 0; i < led_stars->Count(); i++) {
-        uint8_t i_8bit = i * 256 / led_stars->Count();
-        // Compute the absolute value of i_8bit - cycle
-        uint8_t mag_major = i_8bit - display_state.joy.cycle;
-        if (mag_major & 0x80)
-            mag_major = -mag_major;
-        uint8_t mag_minor = i_8bit - display_state.joy.cycle_minor;
-        if (mag_minor & 0x80)
-            mag_minor = -mag_minor;
-        // mag_major and mag_minor now hold 7 bits of data each.  It's
-        // a little tricky to do gamma correction in integer space
-        // without losing too much precision.  Unfortunately, 32-bit
-        // arithmetic is quite expensive on an AVR, and 16-bit only
-        // slightly less so.  Our inputs are only 8 bits, so we're ok
-        // with some loss of magnitude precision during this stage,
-        // as long as we don't lose it all up-front.
-        uint8_t bright_8bit = bright / 16;
-        uint16_t mag_14bit = mag_major * mag_minor;  // 0-16129
-        uint16_t mag_gamma = mag_14bit;              // 0-252
-        mag_gamma *= bright_8bit;                    // 0-64260
-        mag_gamma /= 256;                            // 0-251
-        mag_gamma *= bright_8bit;                    // 0-64005
-        uint16_t pwm = mag_gamma / 16;               // 0-4000
-        uint8_t ledno = by_pos[i];
-        leds.setPWM(ledno, pwm);
-      }
-      // Not happy with this effect; find something better.
-      leds.setPWM(
-          LED_PHASE1,
-          (512 - display_state.joy.cycle - display_state.joy.cycle_minor));
-      leds.setPWM(LED_PHASE2, display_state.joy.cycle);
-      leds.setPWM(LED_PHASE3, display_state.joy.cycle_minor);
-      leds.setPWM(LED_PHASE1, 0);
-      leds.setPWM(LED_PHASE2, 0);
-      leds.setPWM(LED_PHASE3, 0);
+    switch (joy_sub_mode) {
+      case kSubModeCylon:
+        {
+          for (int i = 0; i < led_stars->Count(); i++) {
+            float pct = 1.0 - abs(display_state.joy.phase - i);
+            int ledno = by_pos[i];
+            leds.setPWM(ledno, LedPctToPwm(pct));
+          }
+          display_state.joy.phase += (display_state.joy.direction ? 0.6 : -0.6);
+          if (display_state.joy.direction == 1 &&
+              display_state.joy.phase >= led_stars->Count() - 1) {
+            display_state.joy.direction = 0;
+            display_state.joy.phase = led_stars->Count() - 1;
+            display_state.joy.cycle++;
+          } else if (display_state.joy.direction == 0 &&
+                     display_state.joy.phase <= 0) {
+            display_state.joy.direction = 1;
+            display_state.joy.phase = 0;
+            display_state.joy.cycle++;
+          }
+          if (display_state.joy.cycle == 8) // Blackout is unappealing; skip it
+            display_state.joy.cycle = 1;
+          leds.setPWM(LED_PHASE1,
+                      display_state.joy.cycle & 1 ? bright >> 2 : 0);
+          leds.setPWM(LED_PHASE2,
+                      display_state.joy.cycle & 2 ? bright >> 2 : 0);
+          leds.setPWM(LED_PHASE3,
+                      display_state.joy.cycle & 4 ? bright >> 2 : 0);
+        }
+        break;
+      case kSubModeDoubleChase:
+        {
+          for (uint16_t i = 0; i < led_stars->Count(); i++) {
+            uint8_t i_8bit = i * 256 / led_stars->Count();
+            // Compute the absolute value of i_8bit - cycle
+            uint8_t mag_major = i_8bit - display_state.joy.cycle;
+            if (mag_major & 0x80)
+              mag_major = ~mag_major;
+            uint8_t mag_minor = i_8bit - display_state.joy.cycle_minor;
+            if (mag_minor & 0x80)
+              mag_minor = ~mag_minor;
+            // mag_major and mag_minor now hold 7 bits of data each.  It's
+            // a little tricky to do gamma correction in integer space
+            // without losing too much precision.  Unfortunately, 32-bit
+            // arithmetic is quite expensive on an AVR, and 16-bit only
+            // slightly less so.  Our inputs are only 8 bits, so we're ok
+            // with some loss of magnitude precision during this stage,
+            // as long as we don't lose it all up-front.
+            uint8_t bright_8bit = bright / 16;           // 0-255
+            uint16_t mag_14bit = mag_major * mag_minor;  // 0-16129
+            uint16_t mag_gamma = mag_14bit / 64;         // 0-252
+            mag_gamma *= bright_8bit;                    // 0-64260
+            mag_gamma /= 256;                            // 0-251
+            mag_gamma *= bright_8bit;                    // 0-64005
+            uint16_t pwm = mag_gamma / 16;               // 0-4000
+            uint8_t ledno = by_pos[i];
+            leds.setPWM(ledno, pwm);
+          }
+          // Not happy with this effect; find something better.
+          leds.setPWM(
+              LED_PHASE1,
+              (512 - display_state.joy.cycle - display_state.joy.cycle_minor));
+          leds.setPWM(LED_PHASE2, display_state.joy.cycle);
+          leds.setPWM(LED_PHASE3, display_state.joy.cycle_minor);
+          leds.setPWM(LED_PHASE1, 0);
+          leds.setPWM(LED_PHASE2, 0);
+          leds.setPWM(LED_PHASE3, 0);
 
-      display_state.joy.cycle += 1;
-      display_state.joy.cycle_minor -= 2;
-    } else {
-      for (int i = 0; i < led_stars->Count(); i++) {
-        float pct = 1.0 - abs(display_state.joy.phase - i);
-        int ledno = by_pos[i];
-        leds.setPWM(ledno, LedPctToPwm(pct));
-      }
-      display_state.joy.phase += (display_state.joy.direction ? 0.6 : -0.6);
-      if (display_state.joy.direction == 1 &&
-          display_state.joy.phase >= led_stars->Count() - 1) {
-        display_state.joy.direction = 0;
-        display_state.joy.phase = led_stars->Count() - 1;
-        display_state.joy.cycle++;
-      } else if (display_state.joy.direction == 0 &&
-                 display_state.joy.phase <= 0) {
-        display_state.joy.direction = 1;
-        display_state.joy.phase = 0;
-        display_state.joy.cycle++;
-      }
-      if (display_state.joy.cycle == 8)  // Blackout is unappealing; skip it.
-        display_state.joy.cycle = 1;
-      leds.setPWM(LED_PHASE1, display_state.joy.cycle & 1 ? bright >> 2 : 0);
-      leds.setPWM(LED_PHASE2, display_state.joy.cycle & 2 ? bright >> 2 : 0);
-      leds.setPWM(LED_PHASE3, display_state.joy.cycle & 4 ? bright >> 2 : 0);
+          display_state.joy.cycle += 1;
+          display_state.joy.cycle_minor -= 2;
+        }
+        break;
+      case kSubModeLast:
+        // CANTHAPPEN
+        break;
     }
 
   } else {  // PEACE and LOVE modes are handled by mostly-common code.
