@@ -102,6 +102,13 @@ class CTDebugger final {
 #include "capsense.h"
 #include "tlc5947.h"
 
+// This is smaller than the built-in memset.
+void MyMemSet(void* addr, uint8_t size, uint8_t val) {
+  for (uint8_t i = 0; i < size; i++) {
+    static_cast<char*>(addr)[i] = val;
+  }
+}
+
 // The Arduino doesn't have a built-in random float function, so I
 // have this instead.  It ain't perfect by a long shot, but it works
 // for my needs.
@@ -174,7 +181,7 @@ TLC5947<1,                   // Number of drivers
 #define LED_PHASE3 2
 constexpr float kLoveStarMaxRamp = 0.75;
 constexpr float kPhaseIncrPeace = 0.005;
-constexpr float kPhaseIncrLove = 0.05;
+constexpr float kPhaseIncr = 0.05;
 //#define LED_SCHMITT 3
 //#define LED_COUNT0 3  // Note that COUNT0 == Q
 //#define LED_COUNT1 4
@@ -276,12 +283,19 @@ constexpr const LedStars* led_stars = &led_stars_norm;
 #endif
 constexpr int kNumLedStarsMax = led_stars_norm.pgm_count_;
 
+// Constants for Peace and Love modes.
+constexpr float kLedStarMinMotion = 0.005;
+constexpr float kLedStarDeltaMotion = 0.01;
+constexpr long kLedStarPeriod = 64;
+constexpr long kLedStarBurstPeriod = 128;
+
 #ifndef NDEBUG
 bool dev_mode;
 #endif
 enum DisplayMode { kModeLove, kModePeace, kModeJoy } display_mode = kModeLove;
-enum JoySubMode { kSubModeCylon, kSubModeDoubleChase, kSubModeLast };
-JoySubMode joy_sub_mode = kSubModeCylon;
+enum JoySubMode { kSubModeDoubleChase, kSubModeCylon, kSubModeCylonFill, 
+                  kSubModeLast };
+JoySubMode joy_sub_mode = kSubModeDoubleChase;
 
 // FIXME Why are these separate from the top-level variables?
 struct __attribute__ ((__packed__)) {
@@ -332,8 +346,7 @@ void CTDebugger::write(uint8_t byte) {
 }
 
 // Takes about 186 bytes (if it's actually called)
-void
-CTDebugger::print(float value_in) {
+void CTDebugger::print(float value_in) {
   union {
     // Essentially defines the IEEE 784-2008 binary16 layout
     struct {
@@ -791,9 +804,9 @@ void setup() {
 #endif
   led_stars->Setup();
 
+#if defined(ENABLE_DIM_MODE) && !defined(NDEBUG)
   // dim_mode determines the initial brightness (which is used for
   // the POST, and if the EEPROM is empty).
-#ifndef NDEBUG
   bool dim_mode = ProbeForStartupMode(kPinCsO2S);
   Debugger.print(dim_mode ? 'B' : 'b');
   if (dim_mode) {
@@ -850,7 +863,7 @@ void setup() {
     delay(1000);
     Debugger.write('F');  // See if we can turn all the LEDs on at once.
     digitalWrite(kPinLedBlank, HIGH);
-    delay(100);
+    delay(1000);
   }
   digitalWrite(kPinLedBlank, LOW);
 
@@ -877,13 +890,9 @@ void setup() {
 #endif  // NDEBUG
 
   wdt_enable(WDTO_8S);
-
-#ifndef NDEBUG
-  Debugger.write('T');
-  Debugger.println(kCsThres);
-#endif
 }
 
+float rgbphase;  // Range is [0,3)
 static union {
   struct {
     float phase;
@@ -892,7 +901,6 @@ static union {
     uint8_t cycle_minor;
   } joy;
   struct {
-    float phase;  // Range is [0,3)
     float star_brightness[kNumLedStarsMax];
     float star_motion[kNumLedStarsMax];
     uint8_t star_ramping_up[(kNumLedStarsMax+7)/8];
@@ -914,6 +922,55 @@ void __attribute__((noinline)) SetLoveRGBPin(uint8_t pin, float phase) {
       phase * kLoveStarMaxRamp * kLoveStarMaxRamp));
 }
 
+void JoyCylonHandlePhaseLed() {
+  display_state.joy.cycle++;
+  if (display_state.joy.cycle == 8) // Blackout is unappealing; skip it
+    display_state.joy.cycle = 1;
+  leds.setPWM(LED_PHASE1,
+              display_state.joy.cycle & 1 ? bright >> 2 : 0);
+  leds.setPWM(LED_PHASE2,
+              display_state.joy.cycle & 2 ? bright >> 2 : 0);
+  leds.setPWM(LED_PHASE3,
+              display_state.joy.cycle & 4 ? bright >> 2 : 0);
+}
+
+void RotateRgb() {
+  // The RGB LED's phase goes through the half-open interval [0,3).
+  // In each unit interval along there, two colors are on triangle
+  // waves.  This is much, much cheaper than doing cosine waves,
+  // since I don't need to link in all the floating-point math
+  // stuff!  It also looks nice; if you've seen one of Adafruit's
+  // sample "rotating NeoPixel" sketch that comes loaded in
+  // CircuitPython from the factory, that's what it does; see
+  // https://learn.adafruit.com/adafruit-circuit-playground-express/circuitpython-neopixel
+  float phase_r, phase_g, phase_b; // Range is [0,1]
+  if (rgbphase < 1.0) {
+    phase_r = rgbphase;
+    phase_g = 1.0 - rgbphase;
+    phase_b = 0;
+  } else if (rgbphase < 2.0) {
+    phase_r = 2.0 - rgbphase;
+    phase_g = 0;
+    phase_b = rgbphase - 1.0;
+  } else {
+    phase_r = 0;
+    phase_g = rgbphase - 2.0;
+    phase_b = 3.0 - rgbphase;
+  }
+  rgbphase += display_mode == kModePeace ? kPhaseIncrPeace : kPhaseIncr;
+  // The color wheel looks better if we don't do the gamma
+  // correction here.  However, we do back off by a constant factor,
+  // since the RGB LED is otherwise too bright for comfort.  The
+  // constant is different depending on the mode, since the ramp on
+  // Peace mode is twice as high as the ramp on Love mode.
+  float rgb_backoff = display_mode == kModePeace ? 0.4 : 0.2;
+  leds.setPWM(LED_PHASE1, phase_r * rgb_backoff * bright);
+  leds.setPWM(LED_PHASE2, phase_g * rgb_backoff * bright);
+  leds.setPWM(LED_PHASE3, phase_b * rgb_backoff * bright);
+  if (rgbphase >= 3.0)
+    rgbphase -= 3.0;
+}
+
 void loop() {
   wdt_reset();
   static uint8_t loop_count;
@@ -928,11 +985,11 @@ void loop() {
   bool bright_up_level = csBrightUp.level();
   if (bright_down_level || bright_up_level) {
     if (bright_down_edge)
-      bright_pct -= kBrightChangeRate * 5;
+      bright_pct -= kBrightChangeRate * 3;
     if (bright_down_level)
       bright_pct -= kBrightChangeRate;
     if (bright_up_edge)
-      bright_pct += kBrightChangeRate * 5;
+      bright_pct += kBrightChangeRate * 3;
     if (bright_up_level)
       bright_pct += kBrightChangeRate;
     UpdateBrightnessFromPct();
@@ -971,7 +1028,25 @@ void loop() {
   }
 
   if (gotLove || gotPeace || gotJoy) {
-    memset(&display_state, 0, sizeof(display_state));
+    MyMemSet(&display_state, sizeof(display_state), 0);
+#if 0  // This doesn't work yet
+    if (display_mode != kModeJoy) {
+      // Filling a float16 with the byte 0x38 works out to about .5;
+      // the byte 0x21 is about 0.01.
+      static_assert(sizeof(display_state.peace_love.star_brightness) ==
+                    sizeof(display_state.peace_love.star_motion),
+                    "size mismatch");
+      for (uint8_t i = 0;
+           i < sizeof(display_state.peace_love.star_brightness);
+           i++) {
+        static_cast<char*>(static_cast<void*>(&display_state.peace_love.star_brightness))[i] = 0x38;
+        static_cast<char*>(static_cast<void*>(&display_state.peace_love.star_motion))[i] = 0x21;
+      }
+      MyMemSet(&display_state.peace_love.star_ramping_up,
+               sizeof(display_state.peace_love.star_ramping_up),
+               0x55);
+    }
+#endif
     persistent_data.display_mode = display_mode;
     persistent_data.joy_sub_mode = joy_sub_mode;
     update_persistent_data_at_millis = millis() + 2000;
@@ -985,35 +1060,6 @@ void loop() {
   if (display_mode == kModeJoy) {
     auto by_pos = led_stars->by_pos();
     switch (joy_sub_mode) {
-      case kSubModeCylon:
-        {
-          for (int i = 0; i < led_stars->Count(); i++) {
-            float pct = 1.0 - abs(display_state.joy.phase - i);
-            int ledno = by_pos[i];
-            leds.setPWM(ledno, LedPctToPwm(pct));
-          }
-          display_state.joy.phase += (display_state.joy.direction ? 0.6 : -0.6);
-          if (display_state.joy.direction == 1 &&
-              display_state.joy.phase >= led_stars->Count() - 1) {
-            display_state.joy.direction = 0;
-            display_state.joy.phase = led_stars->Count() - 1;
-            display_state.joy.cycle++;
-          } else if (display_state.joy.direction == 0 &&
-                     display_state.joy.phase <= 0) {
-            display_state.joy.direction = 1;
-            display_state.joy.phase = 0;
-            display_state.joy.cycle++;
-          }
-          if (display_state.joy.cycle == 8) // Blackout is unappealing; skip it
-            display_state.joy.cycle = 1;
-          leds.setPWM(LED_PHASE1,
-                      display_state.joy.cycle & 1 ? bright >> 2 : 0);
-          leds.setPWM(LED_PHASE2,
-                      display_state.joy.cycle & 2 ? bright >> 2 : 0);
-          leds.setPWM(LED_PHASE3,
-                      display_state.joy.cycle & 4 ? bright >> 2 : 0);
-        }
-        break;
       case kSubModeDoubleChase:
         {
           for (uint16_t i = 0; i < led_stars->Count(); i++) {
@@ -1043,8 +1089,11 @@ void loop() {
             leds.setPWM(ledno, pwm);
           }
 
-          // FIXME The LED_PHASE* stuff is about 230-240 bytes; can I
-          // come up with something smaller?
+#if 1
+          RotateRgb();
+#else
+          // This version is about 230-240 bytes, so I'm just using
+          // RotateRgb().
           // This pretty much sets LED_PHASE1 to cycle^2 * bright^2,
           // scaled accordingly and in stages to prevent overflow.
           uint8_t bright15 = bright / 256;  // 0-15
@@ -1077,11 +1126,54 @@ void loop() {
           // LED_PHASE3 roughly inverts the other two phases.
           uint16_t phase3 = bright - ((phase1 + phase2) / 2);
           leds.setPWM(LED_PHASE3, phase3 / 4);
+#endif
 
           display_state.joy.cycle += 1;
           display_state.joy.cycle_minor -= 2;
         }
         break;
+
+      case kSubModeCylon:
+      case kSubModeCylonFill:
+        {
+          for (int i = 0; i < led_stars->Count(); i++) {
+            float pct;
+            if (joy_sub_mode == kSubModeCylon) {
+              pct = 1.0 - abs(display_state.joy.phase - i);
+            } else {
+              pct = constrain(display_state.joy.phase - i, 0, 1);
+              if (display_state.joy.direction) {
+                pct = 1.0 - pct;
+              }
+            }
+            int ledno = by_pos[i];
+            leds.setPWM(ledno, LedPctToPwm(pct));
+          }
+          if (joy_sub_mode == kSubModeCylon) {
+            display_state.joy.phase +=
+                (display_state.joy.direction ? 0.6 : -0.6);
+            if (display_state.joy.direction == 1 &&
+                display_state.joy.phase >= led_stars->Count() - 1) {
+              display_state.joy.direction = 0;
+              display_state.joy.phase = led_stars->Count() - 1;
+              JoyCylonHandlePhaseLed();
+            } else if (display_state.joy.direction == 0 &&
+                       display_state.joy.phase <= 0) {
+              display_state.joy.direction = 1;
+              display_state.joy.phase = 0;
+              JoyCylonHandlePhaseLed();
+            }
+          } else {
+            display_state.joy.phase += 0.6;
+            if (display_state.joy.phase >= led_stars->Count() - 1) {
+              display_state.joy.direction = !display_state.joy.direction;
+              display_state.joy.phase = 0;
+              JoyCylonHandlePhaseLed();
+            }
+          }
+        }
+        break;
+
       case kSubModeLast:
         // CANTHAPPEN
         break;
@@ -1089,46 +1181,7 @@ void loop() {
 
   } else {  // PEACE and LOVE modes are handled by mostly-common code.
 
-    // The RGB LED's phase goes through the half-open interval [0,3).
-    // In each unit interval along there, two colors are on triangle
-    // waves.  This is much, much cheaper than doing cosine waves,
-    // since I don't need to link in all the floating-point math
-    // stuff!  It also looks nice; if you've seen one of Adafruit's
-    // sample "rotating NeoPixel" sketch that comes loaded in
-    // CircuitPython from the factory, that's what it does; see
-    // https://learn.adafruit.com/adafruit-circuit-playground-express/circuitpython-neopixel
-    float phase_r, phase_g, phase_b; // Range is [0,1]
-    if (display_state.peace_love.phase < 1.0) {
-      phase_r = display_state.peace_love.phase;
-      phase_g = 1.0 - display_state.peace_love.phase;
-      phase_b = 0;
-    } else if (display_state.peace_love.phase < 2.0) {
-      phase_r = 2.0 - display_state.peace_love.phase;
-      phase_g = 0;
-      phase_b = display_state.peace_love.phase - 1.0;
-    } else {
-      phase_r = 0;
-      phase_g = display_state.peace_love.phase - 2.0;
-      phase_b = 3.0 - display_state.peace_love.phase;
-    }
-    display_state.peace_love.phase +=
-        display_mode == kModePeace ? kPhaseIncrPeace : kPhaseIncrLove;
-    // The color wheel looks better if we don't do the gamma
-    // correction here.  However, we do back off by a constant factor,
-    // since the RGB LED is otherwise too bright for comfort.  The
-    // constant is different depending on the mode, since the ramp on
-    // Peace mode is twice as high as the ramp on Love mode.
-    float rgb_backoff = display_mode == kModePeace ? 0.4 : 0.2;
-    leds.setPWM(LED_PHASE1, phase_r * rgb_backoff * bright);
-    leds.setPWM(LED_PHASE2, phase_g * rgb_backoff * bright);
-    leds.setPWM(LED_PHASE3, phase_b * rgb_backoff * bright);
-    if (display_state.peace_love.phase >= 3.0)
-      display_state.peace_love.phase -= 3.0;
-
-    constexpr float kLedStarMinMotion = 0.005;
-    constexpr float kLedStarDeltaMotion = 0.01;
-    constexpr long kLedStarPeriod = 64;
-    constexpr long kLedStarBurstPeriod = 128;
+    RotateRgb();
 
     for (int i = 0; i < led_stars->Count(); i++) {
       bool swap_direction = random(kLedStarPeriod) == 0;
