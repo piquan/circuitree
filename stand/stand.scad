@@ -127,7 +127,7 @@ module keepout() {
 }
 module slot() {
      // Slot for the board to sit in
-     translate([0, 0, 8]) cube([27, 2, 20], center=true);
+     translate([0, 0, 8]) cube([26.75, 2, 20], center=true);
 }
 module table() {
      // Flat bottom for the table or other surface
