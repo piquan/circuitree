@@ -831,10 +831,9 @@ void setup() {
   // Only do the visible or slow tests in dev mode; otherwise, just
   // initialize to a blank display.
   leds.clear();
-#ifdef TEST_LEDS
-  // This is disabled by default, since kJoyMode handles the necessary
-  // testing ok.  This is mostly useful for testing how the power
-  // supply can manage sudden demand changes.
+  // This is mostly useful for testing how the power supply can manage
+  // sudden demand changes, but it's also handy to get confirmation of
+  // dev_mode.
   if (dev_mode) {
     // Test LEDs
     // In particular, I want to see if there's a voltage drop at Vcc
@@ -853,7 +852,6 @@ void setup() {
     digitalWrite(kPinLedBlank, HIGH);
     delay(100);
   }
-#endif  // TEST_LED_INRUSH
   digitalWrite(kPinLedBlank, LOW);
 
 #ifndef NDEBUG
@@ -1044,15 +1042,41 @@ void loop() {
             uint8_t ledno = by_pos[i];
             leds.setPWM(ledno, pwm);
           }
-          // Not happy with this effect; find something better.
-          leds.setPWM(
-              LED_PHASE1,
-              (512 - display_state.joy.cycle - display_state.joy.cycle_minor));
-          leds.setPWM(LED_PHASE2, display_state.joy.cycle);
-          leds.setPWM(LED_PHASE3, display_state.joy.cycle_minor);
-          leds.setPWM(LED_PHASE1, 0);
-          leds.setPWM(LED_PHASE2, 0);
-          leds.setPWM(LED_PHASE3, 0);
+
+          // FIXME The LED_PHASE* stuff is about 230-240 bytes; can I
+          // come up with something smaller?
+          // This pretty much sets LED_PHASE1 to cycle^2 * bright^2,
+          // scaled accordingly and in stages to prevent overflow.
+          uint8_t bright15 = bright / 256;  // 0-15
+          bright15 *= bright15;             // 0-225
+          bright15 /= 16;                   // 0-14
+          bright15 += 2;                    // 2-16
+          uint16_t phase1 =
+              ((display_state.joy.cycle * bright15)  // 0-4080
+               / 16)                                 // 0-255
+              * (display_state.joy.cycle / 8);       // 0-8128
+          // Then, the sawtooth is transformed to a triangle: values
+          // above the brightness become a descending value within the
+          // brightness.
+          if (phase1 > bright * 2)
+            phase1 = bright;
+          else if (phase1 > bright)
+            phase1 = (bright * 2) - phase1;
+          // We scale back the brightness since the RGB LED is pretty
+          // bright.
+          leds.setPWM(LED_PHASE1, phase1 / 4);
+          // LED_PHASE2 is similar to LED_PHASE1, but uses cycle_minor.
+          uint16_t phase2 =
+              ((display_state.joy.cycle_minor * bright15) / 16)
+              * (display_state.joy.cycle_minor / 8);
+          if (phase2 > bright * 2)
+            phase2 = bright;
+          else if (phase2 > bright)
+            phase2 = (bright * 2) - phase2;
+          leds.setPWM(LED_PHASE2, phase2 / 4);
+          // LED_PHASE3 roughly inverts the other two phases.
+          uint16_t phase3 = bright - ((phase1 + phase2) / 2);
+          leds.setPWM(LED_PHASE3, phase3 / 4);
 
           display_state.joy.cycle += 1;
           display_state.joy.cycle_minor -= 2;
@@ -1249,5 +1273,5 @@ void loop() {
 }
 
 // Local Variables:
-// compile-command: "~/arduino-1.8.3/arduino --upload --board attiny:avr:ATtinyX4:cpu=attiny84,clock=internal8 christmas-tree.ino"
+// compile-command: "~/arduino-1.8.3/arduino --upload --board attiny:avr:ATtinyX4:cpu=attiny84,clock=internal8 --preserve-temp-files --pref build.path=build/ christmas-tree.ino"
 // End:
