@@ -1326,5 +1326,5 @@ void loop() {
 }
 
 // Local Variables:
-// compile-command: "~/arduino-1.8.3/arduino --upload --board attiny:avr:ATtinyX4:cpu=attiny84,clock=internal8 --preserve-temp-files --pref build.path=build/ christmas-tree.ino"
+// compile-command: "arduino --upload --board attiny:avr:ATtinyX4:cpu=attiny84,clock=internal8 --preserve-temp-files --pref build.path=build/ christmas-tree.ino -v"
 // End:
