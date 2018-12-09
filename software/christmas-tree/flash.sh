@@ -12,4 +12,4 @@ avrdude=avrdude
 
 $avrdude -p attiny84 -c usbtiny                                 \
     -U lfuse:w:0xe2:m -U hfuse:w:0xdd:m -U efuse:w:0xff:m       \
-    -U flash:w:build/christmas-tree.ino.hex:i
+    -U flash:w:build/christmas-tree.ino.hex:i -B 1
