@@ -1336,7 +1336,7 @@ F 3 "~" H 3850 3000 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text Notes 8100 5250 0    50   ~ 0
-PCB Decorations (arrows shown here, footprints on PCB)
+Schematic counterparts as placeholders for PCB\ngraphics (arrows shown here, footprints on PCB)
 $Comp
 L Device:R R10
 U 1 1 5BDAA103
@@ -1348,8 +1348,8 @@ F 3 "~" H 7400 2200 50  0001 C CNN
 	1    7400 2200
 	0    1    1    0   
 $EndComp
-Text Notes 6350 1850 0    50   ~ 0
-Replace R10 with shunt for inrush\ncurrent sensing.\n0.01 ohm for 5mV/100mA\n0.05 ohm for 25mV/100mA\nLimit to 1/8W for 1.5A inrush.
+Text Notes 6200 1850 0    50   ~ 0
+Replace R10 with shunt for inrush\ncurrent sensing w/ oscilloscope\n0.01 ohm for 5mV/100mA\n0.05 ohm for 25mV/100mA\nNeed 1/8W for 1.5A inrush
 Text Notes 7450 3150 0    50   ~ 0
 C3-C4 are near a flexible part of the board.\nPlace in series to prevent shorts from\ncracking; keep ratings high
 $Comp
@@ -1770,21 +1770,21 @@ Wire Wire Line
 Wire Wire Line
 	3750 1700 3750 2100
 Text Notes 3500 700  0    50   ~ 0
-Keep traces from cap sensors through R10-R15\nto uC short, direct, and away from LED modulation
+Keep traces from cap sensors through R11-R16\nto uC short, direct, and away from LED modulation
 Text Notes 5800 1100 0    50   ~ 0
 Some programmers try to drive Vcc to 5V,\nbut most sense logic level on Vcc.\nCut JP1 and JP2 if needed.
 Text Notes 7400 4600 0    50   ~ 0
 C10-C13 are overkill for\nfiltering but are also\ndecorative as electrolytics.
-Text Notes 3550 3900 0    50   ~ 0
-C7 can be a reset cap, but\nmay prevent debugWIRE.\nNote ATtiny has a low-pass filter\non RST# line, so noise rejection\nisn't needed.
+Text Notes 3550 4000 0    50   ~ 0
+C7 can be a reset cap, but\nmay prevent debugWIRE.\nNote ATtiny has a low-pass filter\non RST# line, so noise rejection\nisn't needed. It has no high-side\nprotection diode, hence D24.
 Connection ~ 4050 2950
 Wire Wire Line
 	4050 2950 4050 2900
 Wire Wire Line
 	4050 3250 4050 3300
 Text Notes 3550 3300 0    50   ~ 0
-Ground TP10\nfor ext reset
-Text Notes 3950 1850 0    50   ~ 0
+Ground TP4\nfor ext reset
+Text Notes 3900 1850 0    50   ~ 0
 Cut R8 and R9\nif ISP lines break\ncap sensing
 $Comp
 L christmas-tree:Logo_Love_Always LOGO2
@@ -1797,8 +1797,8 @@ F 3 "~" H 8950 6250 50  0001 C CNN
 	1    8950 6250
 	1    0    0    -1  
 $EndComp
-Text Notes 8950 1800 0    50   ~ 0
-Choose C5 based on U3's datasheet
+Text Notes 9200 1750 0    50   ~ 0
+Choose C5 and C6\nbased on U3's datasheet
 $Comp
 L Connector:TestPoint TP5
 U 1 1 5BD7E368
@@ -1811,4 +1811,6 @@ F 3 "~" H 3150 800 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Connection ~ 2950 800 
+Text Notes 1850 6200 0    50   ~ 0
+R17 sets max current for LEDs;\nsee TLC5947 datasheet
 $EndSCHEMATC
