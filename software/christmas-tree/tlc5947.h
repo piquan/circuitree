@@ -1,3 +1,51 @@
+// tlc5947.h - A library for interfacing with the TLC5947 LED driver
+//
+// Copyright (C) 2018 Joel Ray Holveck
+//
+// Based on the Adafruit TLC5947 library at
+// https://github.com/adafruit/Adafruit_TLC5947/
+// which bears the following notice:
+// ***************************************************
+// This is a library for our Adafruit 24-channel PWM/LED driver
+// Pick one up today in the adafruit shop!
+// ------> http://www.adafruit.com/products/1429
+// These drivers uses SPI to communicate, 3 pins are required to
+// interface: Data, Clock and Latch. The boards are chainable
+// Adafruit invests time and resources providing this open source code,
+// please support Adafruit and open-source hardware by purchasing
+// products from Adafruit!
+// Written by Limor Fried/Ladyada for Adafruit Industries.
+// BSD license, all text above must be included in any redistribution
+// ***************************************************
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     (1) Redistributions of source code must retain the above copyright
+//     notice, this list of conditions and the following disclaimer.
+//
+//     (2) Redistributions in binary form must reproduce the above copyright
+//     notice, this list of conditions and the following disclaimer in
+//     the documentation and/or other materials provided with the
+//     distribution.
+//
+//     (3)The name of the author may not be used to
+//     endorse or promote products derived from this software without
+//     specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+// IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 #ifndef TLC5947_H
 #define TLC5947_H 1
 
@@ -7,7 +55,8 @@
 // adds about 1k of flash and a little RAM.
 //
 // While I'm at it, I also use templates for the clock, MOSI, and latch,
-// to avoid needing to store them in RAM.
+// to avoid needing to store them in RAM.  Instead, the compiler hard-codes
+// them into the source code.
 
 template <uint16_t numdrivers, uint8_t clk, uint8_t dat, uint8_t lat>
 class TLC5947 {

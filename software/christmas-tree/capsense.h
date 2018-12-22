@@ -1,8 +1,26 @@
+// capsense.h - Capacitive touch sensor library for the Arduino
+// Copyright (C) 2018 Joel Ray Holveck
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or (at
+// your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see `http://www.gnu.org/licenses/'.
+
 #ifndef CAPSENSE_H
 #define CAPSENSE_H
 
-// This CapacitiveSensor class is similar to the one at
-// https://github.com/PaulStoffregen/CapacitiveSensor .
+// This CapacitiveSensor class is conceptually similar to the one at
+// https://github.com/PaulStoffregen/CapacitiveSensor, so designs
+// based on Stoffregen's library should work with minimal changes.
+// However, this is a completely new implementation.
 //
 // Some differences:
 //
@@ -77,7 +95,7 @@ uint16_t CapacitiveSensor<charge_pin>::Sense() {
     pinMode(sense_pin_, OUTPUT);
     delayMicroseconds(10);
     pinMode(sense_pin_, INPUT);
-    
+
     // Turn on the charge pin
     digitalWrite(charge_pin, target);
     // See how long it takes before the sense pin detects the change
@@ -102,3 +120,7 @@ uint16_t CapacitiveSensor<charge_pin>::Sense() {
 }
 
 #endif
+
+// Local Variables:
+// mode: c++
+// End:
